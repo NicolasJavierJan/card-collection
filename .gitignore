@@ -1,2 +1,6 @@
 .env
 official_pokemon_species.json
+data/
+downloads/
+extract_owned_sets.py
+scrape_cards.py
