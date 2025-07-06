@@ -1,13 +1,13 @@
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
 -- Variants (Dark, Light, EX, VMAX, Etc)
-CREATE TABLE VariantTypes (
+CREATE TABLE Variant_Types (
     id SERIAL PRIMARY KEY,
     name TEXT UNIQUE NOT NULL
 );
 
 -- Type (Pokemon, Trainer, Energy)
-CREATE TABLE CardTypes (
+CREATE TABLE Card_Types (
     id SERIAL PRIMARY KEY,
     name TEXT UNIQUE NOT NULL -- Pokémon, Trainer, Energy
 );
@@ -19,26 +19,26 @@ CREATE TABLE Locations (
 );
 
 -- Trainer Subtypes
-CREATE TABLE TrainerSubtypes (
+CREATE TABLE Trainer_Subtypes (
     id SERIAL PRIMARY KEY,
     name TEXT UNIQUE NOT NULL -- Item, Stadium, etc.
 );
 
 -- Energy Subtypes
-CREATE TABLE EnergySubtypes (
+CREATE TABLE Energy_Subtypes (
     id SERIAL PRIMARY KEY,
     name TEXT UNIQUE NOT NULL
 );
 
 -- Pokemon Trainers
-CREATE TABLE PokemonTrainers (
+CREATE TABLE Pokemon_Trainers (
     id SERIAL PRIMARY KEY,
     name TEXT UNIQUE NOT NULL -- Blaine's, Erika's, etc.
 );
 
 -- Pokemon Species (Bulbasaur, Ivysaur, Venusaur, etc)
-CREATE TABLE PokemonSpecies (
-    id INT PRIMARY KEY, -- National Dex number
+CREATE TABLE Pokemon_Species (
+    id SERIAL PRIMARY KEY, -- National Dex number
     name TEXT UNIQUE NOT NULL
 );
 
@@ -50,28 +50,28 @@ CREATE TABLE Languages (
 );
 
 -- Card Sets (Base Set, Fossil, etc)
-CREATE TABLE CardSets (
+CREATE TABLE Card_Sets (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
-    code TEXT UNIQUE NOT NULL,
+    code TEXT NOT NULL,
     language_id INT NOT NULL REFERENCES Languages(id),
-    card_total INT NOT NULL
+    card_total INT NOT NULL,
+    UNIQUE (code, language_id)
 );
 
 -- The Main Table (Pokemon Cards!)
 CREATE TABLE Pokemon_Cards (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     card_name TEXT NOT NULL,
-    species_id INT REFERENCES PokemonSpecies(id),
-    variant_type_id INT REFERENCES VariantTypes(id),
-    card_type_id INT REFERENCES CardTypes(id),
-    set_id INT REFERENCES CardSets(id),
+    species_id INT REFERENCES Pokemon_Species(id),
+    variant_type_id INT REFERENCES Variant_Types(id),
+    card_type_id INT REFERENCES Card_Types(id),
+    set_id INT REFERENCES Card_Sets(id),
     card_number INT NOT NULL,
-    language_id INT NOT NULL REFERENCES Languages(id),
     first_edition BOOLEAN DEFAULT FALSE,
     location_id INT REFERENCES Locations(id),
-    trainer_subtype_id INT REFERENCES TrainerSubtypes(id),
-    energy_subtype_id INT REFERENCES EnergySubtypes(id),
-    pokemon_trainer_id INT REFERENCES PokemonTrainers(id),
+    trainer_subtype_id INT REFERENCES Trainer_Subtypes(id),
+    energy_subtype_id INT REFERENCES Energy_Subtypes(id),
+    pokemon_trainer_id INT REFERENCES Pokemon_Trainers(id),
     image_path TEXT
 );

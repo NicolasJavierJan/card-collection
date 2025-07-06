@@ -1,0 +1,6 @@
+@PokemonCardsApi_HostAddress = http://localhost:5236
+
+GET {{PokemonCardsApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

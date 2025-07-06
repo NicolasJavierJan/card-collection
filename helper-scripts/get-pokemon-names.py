@@ -1,6 +1,5 @@
 import requests
 import time
-import json
 import os
 
 def fetch_species_by_id(max_id=1025):
@@ -20,7 +19,9 @@ def fetch_species_by_id(max_id=1025):
             )
 
             if english_name:
-                names.append(english_name)
+                # Escape single quotes for SQL
+                escaped_name = english_name.replace("'", "''")
+                names.append(escaped_name)
         except Exception as e:
             print(f"Error fetching Pokémon ID {pokemon_id}: {e}")
             continue
@@ -29,18 +30,31 @@ def fetch_species_by_id(max_id=1025):
 
     return names
 
-CACHE_FILE = "official_pokemon_species.json"
+CACHE_FILE = "pokemon_species.sql"
 
 if os.path.exists(CACHE_FILE):
-    print("Loading Pokémon species from cache...")
-    with open(CACHE_FILE, "r", encoding="utf-8") as f:
-        pokemon_names = json.load(f)
+    print("Loading from cache (already formatted for SQL).")
 else:
     print("Fetching Pokémon species from API...")
     pokemon_names = fetch_species_by_id()
 
     with open(CACHE_FILE, "w", encoding="utf-8") as f:
-        json.dump(pokemon_names, f, indent=2, ensure_ascii=False)
-    print("Saved Pokémon species list to cache.")
+        f.write("INSERT INTO pokemon_species (name) VALUES\n")
 
-print(f"\nTotal species loaded: {len(pokemon_names)}")
+        for i, name in enumerate(pokemon_names):
+            f.write(f"('{name}')")
+
+            is_last = i == len(pokemon_names) - 1
+            end_of_line = (i + 1) % 6 == 0 or is_last
+
+            if not is_last:
+                f.write(", ")
+
+            if end_of_line:
+                f.write("\n")
+            else:
+                f.write(" ")
+
+    print("Saved Pokémon species list to SQL file.")
+
+print(f"\nTotal species written: {len(open(CACHE_FILE).readlines()) - 1}")
