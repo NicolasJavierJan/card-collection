@@ -28,5 +28,31 @@ services:
       -password=${POSTGRES_PASSWORD}
       migrate
 
+  api:
+    build:
+      context: ./PokemonCardsApi
+    container_name: dotnet_api
+    ports:
+      - "5236:8080"  # hostPort:containerPort
+    depends_on:
+      - postgres
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=pg_db;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+
+  frontend: 
+    build:
+      context: ./pokemon-cards-frontend
+    container_name: react_frontend
+    ports: 
+      - "3000:3000"
+    working_dir: /app
+    volumes:
+      - ./pokemon-cards-frontend:/app
+      - /app/node_modules
+    command: ["npm", "start"]
+    depends_on:
+      - api
+
 volumes:
   pgdata:
