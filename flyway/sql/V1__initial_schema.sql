@@ -63,10 +63,10 @@ CREATE TABLE Card_Sets (
 CREATE TABLE Pokemon_Cards (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     card_name TEXT NOT NULL,
-    species_id INT REFERENCES Pokemon_Species(id),
+    pokemon_species_id INT REFERENCES Pokemon_Species(id),
     variant_type_id INT REFERENCES Variant_Types(id),
     card_type_id INT REFERENCES Card_Types(id),
-    set_id INT REFERENCES Card_Sets(id),
+    card_set_id INT REFERENCES Card_Sets(id),
     card_number INT NOT NULL,
     first_edition BOOLEAN DEFAULT FALSE,
     location_id INT REFERENCES Locations(id),

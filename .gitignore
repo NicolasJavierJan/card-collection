@@ -27,3 +27,5 @@ tools/
 
 .DS_Store
 Thumbs.db
+
+PokemonCardsApi/appsettings.Development.json
