@@ -1,22 +1,17 @@
-// components/Sidebar.tsx
 "use client";
 
-import React from 'react';
+import Link from "next/link";
+import React from "react";
 
-interface SidebarProps {
-  onCollectionClick: () => void;
-}
-
-export default function Sidebar({ onCollectionClick }: SidebarProps) {
+export default function Sidebar() {
   return (
-    <aside style={{ width: '200px', borderRight: '1px solid #ddd', padding: '1rem' }}>
+    <aside style={{ width: "200px", borderRight: "1px solid #ddd", padding: "1rem", flexShrink: 0}}>
       <h2>Menu</h2>
-      <ul style={{ listStyle: 'none', padding: 0 }}>
-        <li
-          style={{ cursor: 'pointer', color: 'blue' }}
-          onClick={onCollectionClick}
-        >
-          My Collection
+      <ul style={{ listStyle: "none", padding: 0 }}>
+        <li>
+          <Link href="/my-collection" style={{ color: "blue", cursor: "pointer", textDecoration: "none" }}>
+            My Collection
+          </Link>
         </li>
       </ul>
     </aside>

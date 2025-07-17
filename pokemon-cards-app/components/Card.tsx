@@ -11,79 +11,123 @@ export default function Card({ card }: Props) {
   return (
     <div
       style={{
-        border: "2px solid #ddd",
-        borderRadius: "10px",
-        padding: "8px 12px",
-        marginBottom: "1rem",
-        background: "#f9f9f9",
-        width: "190px",
+        width: "240px",
+        boxSizing: "border-box",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        position: "relative",
-        boxSizing: "border-box",
+        transition: "transform 0.2s ease-in-out",
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = "scale(1.02)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = "scale(1)";
       }}
     >
+      
       {card.imagePath && (
         <img
           src={`${baseUrl}${card.imagePath}`}
           alt={card.cardName}
           style={{
-            width: "180px",
-            height: "180px",
+            width: "240px",
             objectFit: "contain",
-            borderRadius: "6px",
-            marginBottom: "1rem",
             display: "block",
+            borderRadius: "6px",
           }}
         />
       )}
 
-      <h2
-        style={{
-          fontSize: "1.2rem",
-          fontWeight: "bold",
-          margin: "0 0 0.5rem 0",
-          textAlign: "center",
-          lineHeight: 1.2,
-          wordBreak: "break-word",
-          width: "100%",
-        }}
-      >
-        {card.cardName}
-      </h2>
-
+      
       <div
         style={{
           width: "100%",
-          textAlign: "left",
-          marginBottom: "1.5rem",
-          color: "#444",
-          fontWeight: "500",
-          fontSize: "0.9rem",
-          lineHeight: 1.3,
+          padding: "0.5rem 0.5rem 0",
+          boxSizing: "border-box",
         }}
       >
-        <div>#{card.cardNumber}</div>
-        <div>{card.setName}</div>
-      </div>
-
-      {card.locationName && (
-        <div
+        
+        <h2
           style={{
-            position: "absolute",
-            bottom: "8px",
-            right: "8px",
-            fontSize: "0.8rem",
-            fontStyle: "italic",
-            color: "#666",
-            userSelect: "none",
-            whiteSpace: "nowrap",
+            fontSize: "1rem",
+            fontWeight: "600",
+            margin: "0 0 0.4rem",
+            textAlign: "center",
+            wordBreak: "break-word",
           }}
         >
-          {card.locationName}
+          {card.cardName}
+        </h2>
+
+        
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            fontSize: "0.8rem",
+            fontWeight: 500,
+            color: "#444",
+            marginBottom: "0.6rem",
+            lineHeight: 1.3,
+            width: "100%",
+            boxSizing: "border-box",
+          }}
+        >
+          <div style={{ textAlign: "left" }}>
+            <div>#{card.cardNumber}</div>
+            <div>{card.setName}</div>
+          </div>
+
+          {card.locationName && (
+            <div
+              style={{
+                textAlign: "right",
+                fontStyle: "italic",
+                fontSize: "0.75rem",
+                color: "#666",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {card.locationName}
+            </div>
+          )}
         </div>
-      )}
+
+        
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            gap: "0.4rem",
+            width: "100%",
+          }}
+        >
+          {["Edit", "Move", "Delete"].map((label) => (
+            <button
+              key={label}
+              style={{
+                flex: 1,
+                padding: "6px 0",
+                borderRadius: "4px",
+                border: "1px solid #ccc",
+                backgroundColor: "#fff",
+                fontSize: "0.75rem",
+                cursor: "pointer",
+                transition: "background-color 0.2s ease-in-out",
+              }}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.backgroundColor = "#f0f0f0")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.backgroundColor = "#fff")
+              }
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
