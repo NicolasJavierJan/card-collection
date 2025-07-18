@@ -2,8 +2,8 @@
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-export const fetchAllCards = async () => {
-  const res = await fetch(`${API_BASE}/api/cards`);
+export const fetchAllCards = async (offset: number, limit: number) => {
+  const res = await fetch(`${API_BASE}/api/cards?offset=${offset}&limit=${limit}`);
 
   if (!res.ok) {
     throw new Error("Failed to fetch Pokémon cards");
