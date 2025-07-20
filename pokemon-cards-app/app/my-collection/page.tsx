@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { fetchAllCards } from "../../lib/api";
 import Card from "../../components/Card";
 import { PokemonCard } from "../../models/PokemonCard";
+import { fetchAllCards } from "@/lib/api";
+import CardFilters from "@/components/CardFilters";
 
 export default function MyCollectionPage() {
   const [cards, setCards] = useState<PokemonCard[]>([]);
@@ -11,36 +12,61 @@ export default function MyCollectionPage() {
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
+  const hasMoreRef = useRef(hasMore);
+
+  const [filters, setFilters] = useState<{ setId: number | null; cardTypeId: number | null }>({
+    setId: null,
+    cardTypeId: null,
+  });
 
   const LIMIT = 20;
 
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
-
   const loadingRef = useRef(false);
 
-  const loadMore = async () => {
-    if (loadingRef.current || !hasMore) return;
+  useEffect(() => {
+    hasMoreRef.current = hasMore;
+  }, [hasMore]);
+
+  const loadMore = async (startOffset: number = offset) => {
+    if (loadingRef.current || !hasMoreRef.current) return;
+
+    console.log("Fetching with offset:", startOffset, "filters:", filters);
 
     loadingRef.current = true;
     setLoading(true);
+
     try {
-      const newCards = await fetchAllCards(offset, LIMIT);
-      setCards(prev => [...prev, ...newCards]);
-      setOffset(prev => prev + LIMIT);
-      if (newCards.length < LIMIT){
+      const newCards = await fetchAllCards(
+        startOffset,
+        LIMIT,
+        filters.setId ?? undefined,
+        filters.cardTypeId ?? undefined
+      );
+
+      setCards((prev) => (startOffset === 0 ? newCards : [...prev, ...newCards]));
+      setOffset(startOffset + LIMIT);
+
+      if (newCards.length < LIMIT) {
         setHasMore(false);
-      } 
-    } catch (err: any){
+        hasMoreRef.current = false;
+      }
+    } catch (err: any) {
       setError(err.message);
     } finally {
-      setLoading(false);
       loadingRef.current = false;
+      setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
-    loadMore()
-  }, []);
+    setCards([]);
+    setOffset(0);
+    setHasMore(true);
+    hasMoreRef.current = true;
+    loadingRef.current = false;
+    loadMore(0);
+  }, [filters]);
 
   useEffect(() => {
     const container = scrollContainerRef.current;
@@ -49,11 +75,13 @@ export default function MyCollectionPage() {
     const handleScroll = () => {
       if (
         container.scrollTop + container.clientHeight >= container.scrollHeight - 300 &&
-        !loading && hasMore
+        !loading &&
+        hasMore
       ) {
         loadMore();
       }
-    }
+    };
+
     container.addEventListener("scroll", handleScroll);
     return () => container.removeEventListener("scroll", handleScroll);
   }, [loading, hasMore]);
@@ -61,6 +89,13 @@ export default function MyCollectionPage() {
   return (
     <div ref={scrollContainerRef} style={{ height: "100%", overflowY: "auto", padding: "1rem" }}>
       <h1 style={{ fontSize: "1.5rem", marginBottom: "1rem" }}>My Collection</h1>
+
+      <CardFilters
+        onFilterChange={(newFilters) => {
+          setFilters(newFilters);
+        }}
+      />
+
       {error && <p style={{ color: "red" }}>{error}</p>}
 
       <div
@@ -75,6 +110,9 @@ export default function MyCollectionPage() {
           <Card key={card.id} card={card} />
         ))}
       </div>
+
+      {loading && <p>Loading...</p>}
+      {!hasMore && <p>No more cards.</p>}
     </div>
   );
 }

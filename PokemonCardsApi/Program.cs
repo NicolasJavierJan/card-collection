@@ -58,6 +58,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.MapCardEndpoints();
+app.MapCardSetEndpoints();
+app.MapCardFilters();
 app.MapControllers();
 
 app.Run();

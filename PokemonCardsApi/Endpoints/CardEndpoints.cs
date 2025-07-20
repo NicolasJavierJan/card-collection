@@ -8,13 +8,32 @@ public static class CardEndpoints
 {
     public static void MapCardEndpoints(this WebApplication app)
     {
-        app.MapGet("/api/cards", async (AppDbContext db, [FromServices] IMapper mapper, int limit = 20, int offset = 0) => 
+        app.MapGet("/api/cards", async (
+            AppDbContext db, 
+            [FromServices] IMapper mapper, 
+            int limit = 20, 
+            int offset = 0,
+            int? setId = null,
+            int? cardTypeId = null) => 
         {
-            var pokemonCards = await db.PokemonCards
+            var query = db.PokemonCards
                 .Include(c => c.CardType)
                 .Include(c => c.CardSet)
                 .Include(c => c.Location)
-                .OrderBy(c => c.CardSet)
+                .AsQueryable();
+            
+            if (setId.HasValue)
+            {
+                query = query.Where(c => c.CardSetId == setId!.Value);
+            }
+
+            if (cardTypeId.HasValue)
+            {
+                query = query.Where(c => c.CardTypeId == cardTypeId!.Value);
+            }
+
+            var pokemonCards = await query
+                .OrderBy(c => c.CardSet != null ? c.CardSet.Id : 0)
                 .ThenBy(c => c.CardNumber)
                 .ThenBy(c => c.Location)
                 .ThenBy(c => c.Id)
