@@ -16,5 +16,7 @@ public class MappingProfile : Profile
         CreateMap<CardType, CardTypeDto>();
 
         CreateMap<Location, LocationDto>();
+
+        CreateMap<PokemonSpecies, PokemonSpeciesDto>();
     }
 }

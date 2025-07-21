@@ -5,7 +5,9 @@ import { FilterOptions } from "@/lib/apiFilters";
 import { fetchFilterOptions } from "@/lib/apiFilters";
 
 type Props = {
-    onFilterChange: (filters: { setId: number | null; cardTypeId: number | null, locationId: number | null }) => void;
+    onFilterChange: (filters: { setId: number | null; cardTypeId: number | null, locationId: number | null,
+      pokemonSpeciesId: number | null
+     }) => void;
 };
 
 export default function CardFilters({ onFilterChange } : Props){
@@ -13,6 +15,7 @@ export default function CardFilters({ onFilterChange } : Props){
     const [selectedSetId, setSelectedSetId] = useState<number | null>(null);
     const [selectedCardTypeId, setSelectedCardTypeId] = useState<number | null>(null);
     const [selectedLocationId, setSelectedLocationId] = useState<number | null>(null);
+    const [selectedPokemonSpeciesId, setSelectedPokemonSpeciesId] = useState<number | null>(null);
 
     useEffect(() => {
         fetchFilterOptions()
@@ -24,8 +27,9 @@ export default function CardFilters({ onFilterChange } : Props){
         onFilterChange( { 
             setId: selectedSetId,
             cardTypeId: selectedCardTypeId,
-            locationId: selectedLocationId });
-    }, [selectedSetId, selectedCardTypeId, selectedLocationId ]);
+            locationId: selectedLocationId,
+            pokemonSpeciesId: selectedPokemonSpeciesId });
+    }, [selectedSetId, selectedCardTypeId, selectedLocationId, selectedPokemonSpeciesId ]);
 
    return (
     <div style={{ padding: 20 }}>
@@ -75,6 +79,23 @@ export default function CardFilters({ onFilterChange } : Props){
           {filterOptions.locations.map((location) => (
             <option key={location.id} value={location.id}>
               {location.name}
+            </option>
+          ))}
+        </select>
+      )}
+
+      {filterOptions?.locations &&(
+        <select 
+          value={selectedPokemonSpeciesId ?? ""}
+          onChange={(e) => 
+            setSelectedPokemonSpeciesId(e.target.value === "" ? null : Number(e.target.value))
+          }
+          style={{padding: "0.5rem" }}
+        >
+          <option value="">All Pokemon</option>
+          {filterOptions.pokemonSpecies.map((species) => (
+            <option key={species.id} value={species.id}>
+              {species.name}
             </option>
           ))}
         </select>

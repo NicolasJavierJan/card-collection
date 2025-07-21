@@ -1,10 +1,13 @@
 import { CardSet } from "@/models/CardSet"; 
 import { CardType } from "@/models/CardType";
+import { Location } from "@/models/Location";
+import { PokemonSpecies } from "@/models/PokemonSpecies";
 
 export interface FilterOptions {
   sets: CardSet[]; 
   cardTypes: CardType[];
   locations: Location[];
+  pokemonSpecies: PokemonSpecies[];
 }
 
 export const fetchFilterOptions = async (): Promise<FilterOptions> => {
@@ -16,6 +19,7 @@ export const fetchFilterOptions = async (): Promise<FilterOptions> => {
   return {
     sets: data.sets,
     cardTypes: data.cardTypes,
-    locations: data.locations
+    locations: data.locations,
+    pokemonSpecies: data.pokemonSpecies
   }
 };

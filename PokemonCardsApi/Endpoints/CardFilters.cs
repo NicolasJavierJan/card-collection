@@ -22,12 +22,17 @@ public static class CardFilters
             var locations = await db.Locations
                 .OrderBy(l => l.Id)
                 .ToListAsync();
+            
+            var pokemonSpecies = await db.PokemonSpecies
+                .OrderBy(sp => sp.Id)
+                .ToListAsync();
 
             var result = new FilterOptionsDto
             {
                 Sets = mapper.Map<List<CardSetDto>>(sets),
                 CardTypes = mapper.Map<List<CardTypeDto>>(cardTypes),
-                Locations = mapper.Map<List<LocationDto>>(locations)
+                Locations = mapper.Map<List<LocationDto>>(locations),
+                PokemonSpecies = mapper.Map<List<PokemonSpeciesDto>>(pokemonSpecies)
             };
 
             return Results.Ok(result);
