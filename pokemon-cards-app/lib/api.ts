@@ -6,7 +6,8 @@ export const fetchAllCards = async (
   offset: number, 
   limit: number,
   setId?: number,
-  cardTypeId?: number
+  cardTypeId?: number,
+  locationId?: number,
   ) => {
   
   const params = new URLSearchParams({
@@ -15,6 +16,7 @@ export const fetchAllCards = async (
   });
   if (setId) params.append("setId", setId.toString());
   if (cardTypeId) params.append("cardTypeId", cardTypeId.toString());
+  if (locationId) params.append("locationId", locationId.toString());
 
   const res = await fetch(`${API_BASE}/api/cards?${params.toString()}`);
 

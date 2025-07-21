@@ -19,10 +19,15 @@ public static class CardFilters
                 .OrderBy(ct => ct.Id)
                 .ToListAsync();
 
+            var locations = await db.Locations
+                .OrderBy(l => l.Id)
+                .ToListAsync();
+
             var result = new FilterOptionsDto
             {
                 Sets = mapper.Map<List<CardSetDto>>(sets),
-                CardTypes = mapper.Map<List<CardTypeDto>>(cardTypes)
+                CardTypes = mapper.Map<List<CardTypeDto>>(cardTypes),
+                Locations = mapper.Map<List<LocationDto>>(locations)
             };
 
             return Results.Ok(result);

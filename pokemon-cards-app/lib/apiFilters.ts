@@ -4,6 +4,7 @@ import { CardType } from "@/models/CardType";
 export interface FilterOptions {
   sets: CardSet[]; 
   cardTypes: CardType[];
+  locations: Location[];
 }
 
 export const fetchFilterOptions = async (): Promise<FilterOptions> => {
@@ -14,6 +15,7 @@ export const fetchFilterOptions = async (): Promise<FilterOptions> => {
   const data = await res.json();
   return {
     sets: data.sets,
-    cardTypes: data.cardTypes
+    cardTypes: data.cardTypes,
+    locations: data.locations
   }
 };

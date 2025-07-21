@@ -14,7 +14,8 @@ public static class CardEndpoints
             int limit = 20, 
             int offset = 0,
             int? setId = null,
-            int? cardTypeId = null) => 
+            int? cardTypeId = null,
+            int? locationId = null) => 
         {
             var query = db.PokemonCards
                 .Include(c => c.CardType)
@@ -30,6 +31,11 @@ public static class CardEndpoints
             if (cardTypeId.HasValue)
             {
                 query = query.Where(c => c.CardTypeId == cardTypeId!.Value);
+            }
+
+            if (locationId.HasValue)
+            {
+                query = query.Where(c => c.LocationId == locationId!.Value);
             }
 
             var pokemonCards = await query

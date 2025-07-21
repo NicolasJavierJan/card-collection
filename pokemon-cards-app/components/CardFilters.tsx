@@ -5,13 +5,14 @@ import { FilterOptions } from "@/lib/apiFilters";
 import { fetchFilterOptions } from "@/lib/apiFilters";
 
 type Props = {
-    onFilterChange: (filters: { setId: number | null; cardTypeId: number | null }) => void;
+    onFilterChange: (filters: { setId: number | null; cardTypeId: number | null, locationId: number | null }) => void;
 };
 
 export default function CardFilters({ onFilterChange } : Props){
     const [filterOptions, setFilterOptions] = useState<FilterOptions | null>(null);
     const [selectedSetId, setSelectedSetId] = useState<number | null>(null);
     const [selectedCardTypeId, setSelectedCardTypeId] = useState<number | null>(null);
+    const [selectedLocationId, setSelectedLocationId] = useState<number | null>(null);
 
     useEffect(() => {
         fetchFilterOptions()
@@ -22,8 +23,9 @@ export default function CardFilters({ onFilterChange } : Props){
     useEffect(() => {
         onFilterChange( { 
             setId: selectedSetId,
-            cardTypeId: selectedCardTypeId });
-    }, [selectedSetId, selectedCardTypeId ]);
+            cardTypeId: selectedCardTypeId,
+            locationId: selectedLocationId });
+    }, [selectedSetId, selectedCardTypeId, selectedLocationId ]);
 
    return (
     <div style={{ padding: 20 }}>
@@ -56,6 +58,23 @@ export default function CardFilters({ onFilterChange } : Props){
           {filterOptions.cardTypes.map((type) => (
             <option key={type.id} value={type.id}>
               {type.name}
+            </option>
+          ))}
+        </select>
+      )}
+
+      {filterOptions?.locations &&(
+        <select 
+          value={selectedLocationId ?? ""}
+          onChange={(e) => 
+            setSelectedLocationId(e.target.value === "" ? null : Number(e.target.value))
+          }
+          style={{padding: "0.5rem" }}
+        >
+          <option value="">All Locations</option>
+          {filterOptions.locations.map((location) => (
+            <option key={location.id} value={location.id}>
+              {location.name}
             </option>
           ))}
         </select>

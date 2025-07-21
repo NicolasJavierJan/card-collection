@@ -14,9 +14,10 @@ export default function MyCollectionPage() {
   const [loading, setLoading] = useState(false);
   const hasMoreRef = useRef(hasMore);
 
-  const [filters, setFilters] = useState<{ setId: number | null; cardTypeId: number | null }>({
+  const [filters, setFilters] = useState<{ setId: number | null; cardTypeId: number | null, locationId: number | null }>({
     setId: null,
     cardTypeId: null,
+    locationId: null
   });
 
   const LIMIT = 20;
@@ -41,7 +42,8 @@ export default function MyCollectionPage() {
         startOffset,
         LIMIT,
         filters.setId ?? undefined,
-        filters.cardTypeId ?? undefined
+        filters.cardTypeId ?? undefined,
+        filters.locationId ?? undefined
       );
 
       setCards((prev) => (startOffset === 0 ? newCards : [...prev, ...newCards]));

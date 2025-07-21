@@ -14,5 +14,7 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.LanguageName, opt => opt.MapFrom(src => src.Language != null ? src.Language.Name : null));
 
         CreateMap<CardType, CardTypeDto>();
+
+        CreateMap<Location, LocationDto>();
     }
 }
