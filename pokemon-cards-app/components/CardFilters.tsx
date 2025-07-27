@@ -6,7 +6,8 @@ import { fetchFilterOptions } from "@/lib/apiFilters";
 
 type Props = {
     onFilterChange: (filters: { setId: number | null; cardTypeId: number | null, locationId: number | null,
-      pokemonSpeciesId: number | null, variantTypeId: number | null,
+      pokemonSpeciesId: number | null, variantTypeId: number | null, trainerSubtypeId: number | null, energySubtypeId: number | null,
+      pokemonTrainerId: number | null, cardLanguageId: number | null
      }) => void;
 };
 
@@ -17,6 +18,10 @@ export default function CardFilters({ onFilterChange } : Props){
     const [selectedLocationId, setSelectedLocationId] = useState<number | null>(null);
     const [selectedPokemonSpeciesId, setSelectedPokemonSpeciesId] = useState<number | null>(null);
     const [selectedVariantTypeId, setSelectedVariantTypeId] = useState<number | null>(null);
+    const [selectedTrainerSubtypeId, setSelectedTrainerSubtypeId] = useState<number | null>(null);
+    const [selectedEnergySubtypeId, setSelectedEnergySubtypeId] = useState<number | null>(null);
+    const [selectedPokemonTrainerId, setSelectedPokemonTrainerId] = useState<number | null>(null);
+    const [selectedCardLanguageId, setSelectedCardLanguageId] = useState<number | null>(null);
 
     useEffect(() => {
         fetchFilterOptions()
@@ -30,8 +35,14 @@ export default function CardFilters({ onFilterChange } : Props){
             cardTypeId: selectedCardTypeId,
             locationId: selectedLocationId,
             pokemonSpeciesId: selectedPokemonSpeciesId,
-            variantTypeId: selectedVariantTypeId });
-    }, [selectedSetId, selectedCardTypeId, selectedLocationId, selectedPokemonSpeciesId, selectedVariantTypeId ]);
+            variantTypeId: selectedVariantTypeId,
+            trainerSubtypeId: selectedTrainerSubtypeId,
+            energySubtypeId: selectedEnergySubtypeId,
+            pokemonTrainerId: selectedPokemonTrainerId,
+            cardLanguageId: selectedCardLanguageId });
+    }, [selectedSetId, selectedCardTypeId, selectedLocationId, selectedPokemonSpeciesId, selectedVariantTypeId,
+        selectedTrainerSubtypeId, selectedEnergySubtypeId, selectedPokemonTrainerId, selectedCardLanguageId
+     ]);
 
    return (
     <div style={{ padding: 20 }}>
@@ -115,6 +126,74 @@ export default function CardFilters({ onFilterChange } : Props){
           {filterOptions.variantTypes.map((variants) => (
             <option key={variants.id} value={variants.id}>
               {variants.name}
+            </option>
+          ))}
+        </select>
+      )}
+
+      {filterOptions?.trainerSubtypes &&(
+        <select 
+          value={selectedTrainerSubtypeId ?? ""}
+          onChange={(e) => 
+            setSelectedTrainerSubtypeId(e.target.value === "" ? null : Number(e.target.value))
+          }
+          style={{padding: "0.5rem" }}
+        >
+          <option value="">Trainer Subtypes</option>
+          {filterOptions.trainerSubtypes.map((trainerSubtype) => (
+            <option key={trainerSubtype.id} value={trainerSubtype.id}>
+              {trainerSubtype.name}
+            </option>
+          ))}
+        </select>
+      )}
+
+      {filterOptions?.energySubtypes &&(
+        <select 
+          value={selectedEnergySubtypeId ?? ""}
+          onChange={(e) => 
+            setSelectedEnergySubtypeId(e.target.value === "" ? null : Number(e.target.value))
+          }
+          style={{padding: "0.5rem" }}
+        >
+          <option value="">Energy Subtypes</option>
+          {filterOptions.energySubtypes.map((energySubtype) => (
+            <option key={energySubtype.id} value={energySubtype.id}>
+              {energySubtype.name}
+            </option>
+          ))}
+        </select>
+      )}
+
+      {filterOptions?.pokemonTrainers &&(
+        <select 
+          value={selectedPokemonTrainerId ?? ""}
+          onChange={(e) => 
+            setSelectedPokemonTrainerId(e.target.value === "" ? null : Number(e.target.value))
+          }
+          style={{padding: "0.5rem" }}
+        >
+          <option value="">Pokemon Trainers</option>
+          {filterOptions.pokemonTrainers.map((trainer) => (
+            <option key={trainer.id} value={trainer.id}>
+              {trainer.name}
+            </option>
+          ))}
+        </select>
+      )}
+
+      {filterOptions?.cardLanguages &&(
+        <select 
+          value={selectedCardLanguageId ?? ""}
+          onChange={(e) => 
+            setSelectedCardLanguageId(e.target.value === "" ? null : Number(e.target.value))
+          }
+          style={{padding: "0.5rem" }}
+        >
+          <option value="">Languages</option>
+          {filterOptions.cardLanguages.map((language) => (
+            <option key={language.id} value={language.id}>
+              {language.name}
             </option>
           ))}
         </select>

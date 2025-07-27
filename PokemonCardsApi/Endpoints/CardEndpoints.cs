@@ -17,7 +17,11 @@ public static class CardEndpoints
             int? cardTypeId = null,
             int? locationId = null,
             int? pokemonSpeciesId = null,
-            int? variantTypeId = null) => 
+            int? variantTypeId = null,
+            int? trainerSubtypeId = null,
+            int? energySubtypeId = null,
+            int? pokemonTrainerId = null,
+            int? cardLanguageId = null) => 
         {
             var query = db.PokemonCards
                 .Include(c => c.CardType)
@@ -25,6 +29,10 @@ public static class CardEndpoints
                 .Include(c => c.Location)
                 .Include(c => c.CardLanguage)
                 .Include(c => c.VariantType)
+                .Include(c => c.TrainerSubtype)
+                .Include(c => c.EnergySubtype)
+                .Include(c => c.PokemonTrainer)
+                .Include(c => c.CardLanguage)
                 .AsQueryable();
             
             if (setId.HasValue)
@@ -47,9 +55,29 @@ public static class CardEndpoints
                 query = query.Where(c => c.PokemonSpeciesId == pokemonSpeciesId.Value);
             }
 
-            if(variantTypeId.HasValue)
+            if (variantTypeId.HasValue)
             {
                 query = query.Where(c => c.VariantTypeId == variantTypeId.Value);
+            }
+
+            if (trainerSubtypeId.HasValue)
+            {
+                query = query.Where(c => c.TrainerSubtypeId == trainerSubtypeId);
+            }
+
+            if (energySubtypeId.HasValue)
+            {
+                query = query.Where(c => c.EnergySubtypeId == energySubtypeId);
+            }
+
+            if (pokemonTrainerId.HasValue)
+            {
+                query = query.Where(c => c.PokemonTrainerId == pokemonTrainerId);
+            }
+
+            if (cardLanguageId.HasValue)
+            {
+                query = query.Where(c => c.CardLanguageId == cardLanguageId);
             }
 
             var pokemonCards = await query

@@ -15,13 +15,18 @@ export default function MyCollectionPage() {
   const hasMoreRef = useRef(hasMore);
 
   const [filters, setFilters] = useState<{ setId: number | null; cardTypeId: number | null, locationId: number | null,
-    pokemonSpeciesId: number | null, variantTypeId: number | null
+    pokemonSpeciesId: number | null, variantTypeId: number | null, trainerSubtypeId: number | null, energySubtypeId: number | null,
+    pokemonTrainerId: number | null, cardLanguageId: number | null
   }>({
     setId: null,
     cardTypeId: null,
     locationId: null,
     pokemonSpeciesId: null,
     variantTypeId: null,
+    trainerSubtypeId: null,
+    energySubtypeId: null,
+    pokemonTrainerId: null,
+    cardLanguageId: null
   });
 
   const LIMIT = 20;
@@ -50,6 +55,10 @@ export default function MyCollectionPage() {
         filters.locationId ?? undefined,
         filters.pokemonSpeciesId ?? undefined,
         filters.variantTypeId ?? undefined,
+        filters.trainerSubtypeId ?? undefined,
+        filters.energySubtypeId ?? undefined,
+        filters.pokemonTrainerId ?? undefined,
+        filters.cardLanguageId ?? undefined
       );
 
       setCards((prev) => (startOffset === 0 ? newCards : [...prev, ...newCards]));
