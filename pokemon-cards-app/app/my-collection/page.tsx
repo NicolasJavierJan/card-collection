@@ -15,12 +15,13 @@ export default function MyCollectionPage() {
   const hasMoreRef = useRef(hasMore);
 
   const [filters, setFilters] = useState<{ setId: number | null; cardTypeId: number | null, locationId: number | null,
-    pokemonSpeciesId: number | null
+    pokemonSpeciesId: number | null, variantTypeId: number | null
   }>({
     setId: null,
     cardTypeId: null,
     locationId: null,
     pokemonSpeciesId: null,
+    variantTypeId: null,
   });
 
   const LIMIT = 20;
@@ -48,6 +49,7 @@ export default function MyCollectionPage() {
         filters.cardTypeId ?? undefined,
         filters.locationId ?? undefined,
         filters.pokemonSpeciesId ?? undefined,
+        filters.variantTypeId ?? undefined,
       );
 
       setCards((prev) => (startOffset === 0 ? newCards : [...prev, ...newCards]));

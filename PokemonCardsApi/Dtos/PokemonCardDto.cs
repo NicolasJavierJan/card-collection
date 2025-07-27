@@ -9,4 +9,5 @@ public class PokemonCardDto
     public string? CardTypeName { get; set; }
     public string? SetName { get; set; }
     public string? LocationName { get; set; }
+    public required string CardLanguageName { get; set; }
 }

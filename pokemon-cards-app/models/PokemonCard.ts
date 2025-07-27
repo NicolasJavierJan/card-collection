@@ -9,4 +9,5 @@ export type PokemonCard = {
   firstEdition?: boolean;
   imagePath?: string;
   locationName?: string;
+  cardLanguage: string;
 };

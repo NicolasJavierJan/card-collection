@@ -9,6 +9,7 @@ export const fetchAllCards = async (
   cardTypeId?: number,
   locationId?: number,
   pokemonSpeciesId?: number,
+  variantTypeId?: number
   ) => {
   
   const params = new URLSearchParams({
@@ -19,6 +20,7 @@ export const fetchAllCards = async (
   if (cardTypeId) params.append("cardTypeId", cardTypeId.toString());
   if (locationId) params.append("locationId", locationId.toString());
   if (pokemonSpeciesId) params.append("pokemonSpeciesId", pokemonSpeciesId.toString());
+  if (variantTypeId) params.append("variantTypeId", variantTypeId.toString());
 
   const res = await fetch(`${API_BASE}/api/cards?${params.toString()}`);
 

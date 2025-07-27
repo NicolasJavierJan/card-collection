@@ -6,7 +6,7 @@ import { fetchFilterOptions } from "@/lib/apiFilters";
 
 type Props = {
     onFilterChange: (filters: { setId: number | null; cardTypeId: number | null, locationId: number | null,
-      pokemonSpeciesId: number | null
+      pokemonSpeciesId: number | null, variantTypeId: number | null,
      }) => void;
 };
 
@@ -16,6 +16,7 @@ export default function CardFilters({ onFilterChange } : Props){
     const [selectedCardTypeId, setSelectedCardTypeId] = useState<number | null>(null);
     const [selectedLocationId, setSelectedLocationId] = useState<number | null>(null);
     const [selectedPokemonSpeciesId, setSelectedPokemonSpeciesId] = useState<number | null>(null);
+    const [selectedVariantTypeId, setSelectedVariantTypeId] = useState<number | null>(null);
 
     useEffect(() => {
         fetchFilterOptions()
@@ -28,8 +29,9 @@ export default function CardFilters({ onFilterChange } : Props){
             setId: selectedSetId,
             cardTypeId: selectedCardTypeId,
             locationId: selectedLocationId,
-            pokemonSpeciesId: selectedPokemonSpeciesId });
-    }, [selectedSetId, selectedCardTypeId, selectedLocationId, selectedPokemonSpeciesId ]);
+            pokemonSpeciesId: selectedPokemonSpeciesId,
+            variantTypeId: selectedVariantTypeId });
+    }, [selectedSetId, selectedCardTypeId, selectedLocationId, selectedPokemonSpeciesId, selectedVariantTypeId ]);
 
    return (
     <div style={{ padding: 20 }}>
@@ -44,7 +46,7 @@ export default function CardFilters({ onFilterChange } : Props){
           <option value="">All Card Sets</option>
           {filterOptions.sets.map((set) => (
             <option key={set.id} value={set.id}>
-              {set.name} - {set.languageName}
+              {set.name}
             </option>
           ))}
         </select>
@@ -96,6 +98,23 @@ export default function CardFilters({ onFilterChange } : Props){
           {filterOptions.pokemonSpecies.map((species) => (
             <option key={species.id} value={species.id}>
               {species.name}
+            </option>
+          ))}
+        </select>
+      )}
+
+      {filterOptions?.variantTypes &&(
+        <select 
+          value={selectedVariantTypeId ?? ""}
+          onChange={(e) => 
+            setSelectedVariantTypeId(e.target.value === "" ? null : Number(e.target.value))
+          }
+          style={{padding: "0.5rem" }}
+        >
+          <option value="">All Variants</option>
+          {filterOptions.variantTypes.map((variants) => (
+            <option key={variants.id} value={variants.id}>
+              {variants.name}
             </option>
           ))}
         </select>

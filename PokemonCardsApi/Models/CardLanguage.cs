@@ -1,4 +1,4 @@
-public class Language
+public class CardLanguage
 {
     public int Id { get; set; }
     public required string Code { get; set; }

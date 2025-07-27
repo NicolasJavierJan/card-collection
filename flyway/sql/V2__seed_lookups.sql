@@ -1,5 +1,5 @@
 -- Languages
-INSERT INTO Languages (code, name) VALUES
+INSERT INTO Card_Languages (code, name) VALUES
   ('EN', 'English'),
   ('ES', 'Spanish'),
   ('JP', 'Japanese');

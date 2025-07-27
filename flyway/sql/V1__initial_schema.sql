@@ -43,7 +43,7 @@ CREATE TABLE Pokemon_Species (
 );
 
 -- Languages
-CREATE TABLE Languages (
+CREATE TABLE Card_Languages (
     id SERIAL PRIMARY KEY,
     code TEXT UNIQUE NOT NULL,  -- e.g. 'EN'
     name TEXT UNIQUE NOT NULL   -- e.g. 'English'
@@ -54,9 +54,8 @@ CREATE TABLE Card_Sets (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     code TEXT NOT NULL,
-    language_id INT NOT NULL REFERENCES Languages(id),
     card_total INT NOT NULL,
-    UNIQUE (code, language_id)
+    UNIQUE (name, code)
 );
 
 -- The Main Table (Pokemon Cards!)
@@ -73,5 +72,6 @@ CREATE TABLE Pokemon_Cards (
     trainer_subtype_id INT REFERENCES Trainer_Subtypes(id),
     energy_subtype_id INT REFERENCES Energy_Subtypes(id),
     pokemon_trainer_id INT REFERENCES Pokemon_Trainers(id),
+    card_language_id INT NOT NULL REFERENCES Card_Languages(id),
     image_path TEXT
 );

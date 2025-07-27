@@ -16,12 +16,15 @@ public static class CardEndpoints
             int? setId = null,
             int? cardTypeId = null,
             int? locationId = null,
-            int? pokemonSpeciesId = null) => 
+            int? pokemonSpeciesId = null,
+            int? variantTypeId = null) => 
         {
             var query = db.PokemonCards
                 .Include(c => c.CardType)
                 .Include(c => c.CardSet)
                 .Include(c => c.Location)
+                .Include(c => c.CardLanguage)
+                .Include(c => c.VariantType)
                 .AsQueryable();
             
             if (setId.HasValue)
@@ -42,6 +45,11 @@ public static class CardEndpoints
             if (pokemonSpeciesId.HasValue)
             {
                 query = query.Where(c => c.PokemonSpeciesId == pokemonSpeciesId.Value);
+            }
+
+            if(variantTypeId.HasValue)
+            {
+                query = query.Where(c => c.VariantTypeId == variantTypeId.Value);
             }
 
             var pokemonCards = await query

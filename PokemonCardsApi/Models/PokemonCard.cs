@@ -14,6 +14,7 @@ public class PokemonCard
     public int? TrainerSubtypeId { get; set; }
     public int? EnergySubtypeId { get; set; }
     public int? PokemonTrainerId { get; set; }
+    public required int CardLanguageId { get; set; }
     public string? ImagePath { get; set; }
 
     public CardType? CardType { get; set; }
@@ -24,4 +25,5 @@ public class PokemonCard
     public TrainerSubtype? TrainerSubtype { get; set; }
     public EnergySubtype? EnergySubtype { get; set; }
     public PokemonTrainer? PokemonTrainer { get; set; }
+    public CardLanguage? CardLanguage { get; set; }
 }

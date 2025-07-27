@@ -14,7 +14,6 @@ public static class CardSetEndpoints
         ) => 
         {
             var cardSets = await db.CardSets
-                .Include(c => c.Language)
                 .OrderBy(c => c.Id)
                 .ToListAsync();
             
