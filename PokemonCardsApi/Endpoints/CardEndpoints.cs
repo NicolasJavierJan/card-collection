@@ -8,7 +8,7 @@ public static class CardEndpoints
 {
     public static void MapCardEndpoints(this WebApplication app)
     {
-        app.MapGet("/api/cards", async (
+        app.MapGet("/api/collection", async (
             AppDbContext db, 
             [FromServices] IMapper mapper, 
             int limit = 20, 

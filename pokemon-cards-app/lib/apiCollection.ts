@@ -30,7 +30,7 @@ export const fetchAllCards = async (
   if (pokemonTrainerId) params.append("pokemonTrainerId", pokemonTrainerId.toString());
   if (cardLanguageId) params.append("cardLanguageId", cardLanguageId.toString());
 
-  const res = await fetch(`${API_BASE}/api/cards?${params.toString()}`);
+  const res = await fetch(`${API_BASE}/api/collection?${params.toString()}`);
 
   if (!res.ok) {
     throw new Error("Failed to fetch Pokémon cards");

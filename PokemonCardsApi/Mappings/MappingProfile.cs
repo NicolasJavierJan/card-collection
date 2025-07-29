@@ -10,6 +10,12 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.SetName, opt => opt.MapFrom(src => src.CardSet != null ? src.CardSet.Name : null))
             .ForMember(dest => dest.LocationName, opt => opt.MapFrom(src => src.Location != null ? src.Location.Name : null))
             .ForMember(dest => dest.CardLanguageName, opt => opt.MapFrom(src => src.CardLanguage != null ? src.CardLanguage.Name : null));
+
+        CreateMap<PokemonCard, CardDexEntryDto>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.PokemonSpeciesId))
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.PokemonSpecies.Name))
+            .ForMember(dest => dest.ImagePath, opt => opt.MapFrom(src => src.ImagePath))
+            .ForMember(dest => dest.IsMissing, opt => opt.Ignore());
         
         CreateMap<CardSet, CardSetDto>();
 

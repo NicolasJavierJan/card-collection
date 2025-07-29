@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import Card from "../../components/Card";
 import { PokemonCard } from "../../models/PokemonCard";
-import { fetchAllCards } from "@/lib/api";
+import { fetchAllCards } from "@/lib/apiCollection";
 import CardFilters from "@/components/CardFilters";
 
 export default function MyCollectionPage() {

@@ -14,7 +14,7 @@ public static class CardSetEndpoints
         ) => 
         {
             var cardSets = await db.CardSets
-                .OrderBy(c => c.Id)
+                .OrderBy(c => c.Name)
                 .ToListAsync();
             
             var dtoCardSets = mapper.Map<List<CardSetDto>>(cardSets);
