@@ -28,7 +28,8 @@ public static class CardDex
                 .ToListAsync();
             
             var cardsBySpecies = cardDexCards
-                .GroupBy(c => c.PokemonSpeciesId)
+                .Where(c => c.PokemonSpeciesId.HasValue)
+                .GroupBy(c => c.PokemonSpeciesId!.Value)
                 .ToDictionary(g => g.Key, g => g.First());
             
             var results = new List<CardDexEntryDto>();
@@ -53,7 +54,46 @@ public static class CardDex
                 }
             }
 
-            return Results.Ok(results.OrderBy(r => r.Id));
+            return Results.Ok(
+                results
+                .OrderBy(r => r.Id)
+                .Skip(offset)
+                .Take(limit));
+        });
+
+        app.MapGet("/api/cardDex/recommendations", async (
+            AppDbContext db,
+            [FromServices] IMapper mapper) =>
+        {
+            const int CardDexLocationId = 2;
+            const int CardTypeId = 1;
+
+            var speciesInDex = await db.PokemonCards
+                .Where(c => c.LocationId == CardDexLocationId && c.CardTypeId == CardTypeId && c.PokemonSpeciesId != null)
+                .Select(c => c.PokemonSpeciesId)
+                .Where(id => id != null)
+                .Distinct()
+                .ToListAsync();
+            
+            var recommendations = await db.PokemonCards
+                .Where(c => c.LocationId != CardDexLocationId &&
+                            c.CardTypeId == CardTypeId &&
+                            c.PokemonSpeciesId != null &&
+                            !speciesInDex.Contains(c.PokemonSpeciesId.Value))
+                .Include(c => c.PokemonSpecies)
+                .Include(c => c.Location)
+                .Include(c => c.CardSet)
+                .Include(c => c.CardType)
+                .Include(c => c.CardLanguage)
+                .Include(c => c.VariantType)
+                .Include(c => c.TrainerSubtype)
+                .Include(c => c.EnergySubtype)
+                .Include(c => c.PokemonTrainer)
+                .ToListAsync();
+
+            var mapped = mapper.Map<List<PokemonCardDto>>(recommendations);
+            
+            return Results.Ok(mapped);
         });
     }
 }

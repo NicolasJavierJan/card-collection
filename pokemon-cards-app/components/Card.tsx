@@ -3,11 +3,12 @@ import { PokemonCard } from "../models/PokemonCard";
 
 type Props = {
   card: PokemonCard;
+  actions?: React.ReactNode;
 };
 
 const baseUrl = process.env.NEXT_PUBLIC_IMAGE_BASE_URL;
 
-export default function Card({ card }: Props) {
+export default function Card({ card, actions }: Props) {
   return (
     <div
       style={{
@@ -94,39 +95,18 @@ export default function Card({ card }: Props) {
           )}
         </div>
 
-        
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            gap: "0.4rem",
-            width: "100%",
-          }}
-        >
-          {["Edit", "Move", "Delete"].map((label) => (
-            <button
-              key={label}
-              style={{
-                flex: 1,
-                padding: "6px 0",
-                borderRadius: "4px",
-                border: "1px solid #ccc",
-                backgroundColor: "#fff",
-                fontSize: "0.75rem",
-                cursor: "pointer",
-                transition: "background-color 0.2s ease-in-out",
-              }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.backgroundColor = "#f0f0f0")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.backgroundColor = "#fff")
-              }
-            >
-              {label}
-            </button>
-          ))}
-        </div>
+        {actions && (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              gap: "0.4rem",
+              width: "100%",
+            }}
+          >
+            {actions}
+          </div>
+        )}
       </div>
     </div>
   );

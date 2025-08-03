@@ -13,7 +13,7 @@ public class MappingProfile : Profile
 
         CreateMap<PokemonCard, CardDexEntryDto>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.PokemonSpeciesId))
-            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.PokemonSpecies.Name))
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.PokemonSpecies!.Name))
             .ForMember(dest => dest.ImagePath, opt => opt.MapFrom(src => src.ImagePath))
             .ForMember(dest => dest.IsMissing, opt => opt.Ignore());
         

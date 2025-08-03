@@ -14,6 +14,17 @@ export default function MyCollectionPage() {
   const [loading, setLoading] = useState(false);
   const hasMoreRef = useRef(hasMore);
 
+  const buttonStyle: React.CSSProperties = {
+    flex: 1,
+    padding: "6px 0",
+    borderRadius: "4px",
+    border: "1px solid #ccc",
+    backgroundColor: "#fff",
+    fontSize: "0.75rem",
+    cursor: "pointer",
+    transition: "background-color 0.2s ease-in-out",
+  };
+
   const [filters, setFilters] = useState<{ setId: number | null; cardTypeId: number | null, locationId: number | null,
     pokemonSpeciesId: number | null, variantTypeId: number | null, trainerSubtypeId: number | null, energySubtypeId: number | null,
     pokemonTrainerId: number | null, cardLanguageId: number | null
@@ -124,7 +135,16 @@ export default function MyCollectionPage() {
         }}
       >
         {cards.map((card) => (
-          <Card key={card.id} card={card} />
+          <Card 
+          key={card.id} 
+          card={card}
+          actions={
+            <>
+              <button style={buttonStyle}>Edit</button>
+              <button style={buttonStyle}>Move</button>
+              <button style={buttonStyle}>Delete</button>
+            </>
+          } />
         ))}
       </div>
 
