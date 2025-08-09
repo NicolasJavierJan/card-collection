@@ -90,7 +90,7 @@ useEffect(() => {
                   listStyle: "none",
                   paddingLeft: "1rem",
                   marginTop: "0.5rem",
-                  maxHeight: "300px",
+                  maxHeight: "calc(95vh - 200px)",
                   overflowY: "auto",
                 }}
               >

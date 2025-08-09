@@ -25,6 +25,16 @@ export default function CardDexPage(){
     const scrollContainerRef = useRef<HTMLDivElement | null>(null);
     const loadingRef = useRef(false);
 
+    const buttonStyle: React.CSSProperties = {
+    padding: "0.5rem 1rem",
+    border: "1px solid #ccc",
+    borderRadius: "6px",
+    backgroundColor: "#f5f5f5",
+    cursor: "pointer",
+    fontSize: "0.95rem",
+    transition: "background 0.2s",
+  };
+
     useEffect(() => {
         hasMoreRef.current = hasMore;
     }, [hasMore]);
@@ -152,6 +162,13 @@ export default function CardDexPage(){
               currentIndex={currentIndex}
               onClose={() => setIsModalOpen(false)}
               onNavigate={setCurrentIndex}
+              actions={
+                <>
+                  <button style={buttonStyle}>Move</button>
+                  <button style={buttonStyle}>Dismiss</button>
+                  <button style={buttonStyle}>Blacklist</button>
+                </>
+              }
             />
           )}
     
