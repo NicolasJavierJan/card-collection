@@ -50,17 +50,17 @@ export default function SetCardCard({ card, actions }: Props) {
             wordBreak: "break-word",
           }}
         >
-          #{card.cardNumber} - {card.cardNames.join(", ")}
+          #{card.cardNumber} - {card.cardNames.length > 0 ? card.cardNames.join(", ") : "???"}
         </h2>
 
         <p style={{ fontSize: "0.85rem", margin: "0.25rem 0" }}>
-          Variant: {card.variant ?? "N/A"}, Type: {card.cardType ?? "N/A"}
+          Variant: {card.variant ?? "???"}, Type: {card.cardType ?? "???"}
         </p>
         <p style={{ fontSize: "0.85rem", margin: "0.25rem 0" }}>
-          Languages: {card.languages.length > 0 ? card.languages.join(", ") : "N/A"}
+          Languages: {card.languages.length > 0 ? card.languages.join(", ") : "???"}
         </p>
         <p style={{ fontSize: "0.85rem", margin: "0.25rem 0" }}>
-          Locations: {card.locations.length > 0 ? card.locations.join(", ") : "N/A"}
+          Locations: {card.locations.length > 0 ? card.locations.join(", ") : "???"}
         </p>
 
         {actions && (
