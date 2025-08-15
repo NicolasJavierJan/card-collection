@@ -5,14 +5,14 @@ import { FilterOptions } from "@/lib/apiFilters";
 import { fetchFilterOptions } from "@/lib/apiFilters";
 
 type Props = {
+    filterOptions: FilterOptions
     onFilterChange: (filters: { setId: number | null; cardTypeId: number | null, locationId: number | null,
       pokemonSpeciesId: number | null, variantTypeId: number | null, trainerSubtypeId: number | null, energySubtypeId: number | null,
       pokemonTrainerId: number | null, cardLanguageId: number | null
      }) => void;
 };
 
-export default function CardFilters({ onFilterChange } : Props){
-    const [filterOptions, setFilterOptions] = useState<FilterOptions | null>(null);
+export default function CardFilters({ filterOptions, onFilterChange } : Props){
     const [selectedSetId, setSelectedSetId] = useState<number | null>(null);
     const [selectedCardTypeId, setSelectedCardTypeId] = useState<number | null>(null);
     const [selectedLocationId, setSelectedLocationId] = useState<number | null>(null);
@@ -22,12 +22,6 @@ export default function CardFilters({ onFilterChange } : Props){
     const [selectedEnergySubtypeId, setSelectedEnergySubtypeId] = useState<number | null>(null);
     const [selectedPokemonTrainerId, setSelectedPokemonTrainerId] = useState<number | null>(null);
     const [selectedCardLanguageId, setSelectedCardLanguageId] = useState<number | null>(null);
-
-    useEffect(() => {
-        fetchFilterOptions()
-            .then(setFilterOptions)
-            .catch((err) => console.error("Failed to fetch filters: ", err));
-    }, []);
 
     useEffect(() => {
         onFilterChange( { 
@@ -46,7 +40,7 @@ export default function CardFilters({ onFilterChange } : Props){
 
    return (
     <div style={{ padding: 20 }}>
-      {filterOptions?.sets && (
+      {filterOptions.sets && (
         <select
           value={selectedSetId ?? ""}
           onChange={(e) =>
@@ -63,7 +57,7 @@ export default function CardFilters({ onFilterChange } : Props){
         </select>
       )}
 
-      {filterOptions?.cardTypes && (
+      {filterOptions.cardTypes && (
         <select
           value={selectedCardTypeId ?? ""}
           onChange={(e) =>
@@ -80,7 +74,7 @@ export default function CardFilters({ onFilterChange } : Props){
         </select>
       )}
 
-      {filterOptions?.locations &&(
+      {filterOptions.locations &&(
         <select 
           value={selectedLocationId ?? ""}
           onChange={(e) => 
@@ -97,7 +91,7 @@ export default function CardFilters({ onFilterChange } : Props){
         </select>
       )}
 
-      {filterOptions?.locations &&(
+      {filterOptions.locations &&(
         <select 
           value={selectedPokemonSpeciesId ?? ""}
           onChange={(e) => 
@@ -114,7 +108,7 @@ export default function CardFilters({ onFilterChange } : Props){
         </select>
       )}
 
-      {filterOptions?.variantTypes &&(
+      {filterOptions.variantTypes &&(
         <select 
           value={selectedVariantTypeId ?? ""}
           onChange={(e) => 
@@ -131,7 +125,7 @@ export default function CardFilters({ onFilterChange } : Props){
         </select>
       )}
 
-      {filterOptions?.trainerSubtypes &&(
+      {filterOptions.trainerSubtypes &&(
         <select 
           value={selectedTrainerSubtypeId ?? ""}
           onChange={(e) => 
@@ -148,7 +142,7 @@ export default function CardFilters({ onFilterChange } : Props){
         </select>
       )}
 
-      {filterOptions?.energySubtypes &&(
+      {filterOptions.energySubtypes &&(
         <select 
           value={selectedEnergySubtypeId ?? ""}
           onChange={(e) => 
@@ -165,7 +159,7 @@ export default function CardFilters({ onFilterChange } : Props){
         </select>
       )}
 
-      {filterOptions?.pokemonTrainers &&(
+      {filterOptions.pokemonTrainers &&(
         <select 
           value={selectedPokemonTrainerId ?? ""}
           onChange={(e) => 
@@ -182,7 +176,7 @@ export default function CardFilters({ onFilterChange } : Props){
         </select>
       )}
 
-      {filterOptions?.cardLanguages &&(
+      {filterOptions.cardLanguages &&(
         <select 
           value={selectedCardLanguageId ?? ""}
           onChange={(e) => 

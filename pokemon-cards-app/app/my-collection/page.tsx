@@ -5,6 +5,7 @@ import Card from "../../components/Card";
 import { PokemonCard } from "../../models/PokemonCard";
 import { fetchAllCards } from "@/lib/apiCollection";
 import CardFilters from "@/components/CardFilters";
+import { useFilterOptions } from "@/context/filterOptionsProvider";
 
 export default function MyCollectionPage() {
   const [cards, setCards] = useState<PokemonCard[]>([]);
@@ -13,6 +14,8 @@ export default function MyCollectionPage() {
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
   const hasMoreRef = useRef(hasMore);
+
+  const { filterOptions, refreshFilters } = useFilterOptions();
 
   const buttonStyle: React.CSSProperties = {
     flex: 1,
@@ -114,11 +117,19 @@ export default function MyCollectionPage() {
     return () => container.removeEventListener("scroll", handleScroll);
   }, [loading, hasMore]);
 
+  if (!filterOptions) {
+    return <p>Loading filters...</p>;
+  }
+  
   return (
+    
     <div ref={scrollContainerRef} style={{ height: "100%", overflowY: "auto", padding: "1rem" }}>
       <h1 style={{ fontSize: "1.5rem", marginBottom: "1rem" }}>My Collection</h1>
 
+
+
       <CardFilters
+        filterOptions={filterOptions} 
         onFilterChange={(newFilters) => {
           setFilters(newFilters);
         }}
