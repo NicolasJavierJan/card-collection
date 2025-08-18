@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useFilterOptions } from "@/context/filterOptionsProvider";
+import { getCardImage } from "@/lib/cardImage";
 
 export default function AddCardPage() {
   const { filterOptions } = useFilterOptions();
@@ -65,30 +66,46 @@ export default function AddCardPage() {
     return newErrors.length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!validateForm()) {
-      return;
+    if (!validateForm()) return;
+
+    try {
+      
+      const selectedLanguage = filterOptions!.cardLanguages.find(l => l.id === languageId);
+      const selectedSet = filterOptions!.sets.find(s => s.id === cardSetId);
+
+      const imagePath = await getCardImage(
+        selectedLanguage?.code.toLowerCase() ?? "",
+        selectedSet?.code.toLowerCase() ?? "",
+        cardNumber
+      );
+
+      const newCard = {
+        cardName,
+        cardTypeId,
+        pokemonSpeciesId,
+        variantTypeId,
+        trainerSubtypeId,
+        energySubtypeId,
+        pokemonTrainerId,
+        cardSetId,
+        cardNumber,
+        firstEdition: firstEditionId === 1,
+        languageId,
+        locationId,
+        imagePath, 
+      };
+
+      console.log("Submitting card:", newCard);
+
+    } catch (err) {
+      console.error(err);
+      setErrors(["Failed to fetch card image."]);
     }
-
-    const newCard = {
-      cardName,
-      cardTypeId,
-      pokemonSpeciesId,
-      variantTypeId,
-      trainerSubtypeId,
-      energySubtypeId,
-      pokemonTrainerId,
-      cardSetId,
-      cardNumber,
-      firstEdition: firstEditionId === 1,
-      languageId,
-      locationId,
-    };
-
-    console.log("Submitting card:", newCard);
   };
+
 
   if (!filterOptions) {
     return <p>Loading species...</p>;

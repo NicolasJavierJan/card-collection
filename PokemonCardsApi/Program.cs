@@ -61,6 +61,7 @@ app.MapCardEndpoints();
 app.MapCardDex();
 app.MapCardSetEndpoints();
 app.MapCardFilters();
+app.MapCardImageEndpoint();
 app.MapControllers();
 
 app.Run();
