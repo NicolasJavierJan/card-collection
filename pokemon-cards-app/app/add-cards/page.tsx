@@ -15,8 +15,8 @@ export default function AddCardPage() {
   const [cardSetId, setCardSetId] = useState<number | null>(null);
   const [cardNumber, setCardNumber] = useState("");
   const [firstEditionId, setFirstEditionId] = useState<number | null>(0);
+  const [languageId, setLanguageId] = useState<number | null>(null);
   const [locationId, setLocationId] = useState<number | null>(null);
-  const [cardFile, setCardFile] = useState<File | null>(null);
 
   const [errors, setErrors] = useState<string[]>([]);
 
@@ -49,7 +49,7 @@ export default function AddCardPage() {
     if (!cardSetId) newErrors.push("Card Set is required.");
     if (!cardNumber) newErrors.push("Card Number is required.");
     if (!locationId) newErrors.push("Location is required.");
-    if (!cardFile) newErrors.push("Card Image is required.");
+    if (!languageId) newErrors.push("Language is required.");
 
     if (cardTypeId === 1 && !pokemonSpeciesId) {
       newErrors.push("Pokémon Species is required for Pokémon cards.");
@@ -83,8 +83,8 @@ export default function AddCardPage() {
       cardSetId,
       cardNumber,
       firstEdition: firstEditionId === 1,
+      languageId,
       locationId,
-      cardImage: cardFile ? cardFile.name : null,
     };
 
     console.log("Submitting card:", newCard);
@@ -271,6 +271,24 @@ export default function AddCardPage() {
       </div>
 
       <div style={{ marginTop: "1rem" }}>
+        <label htmlFor="language">Language:</label>
+        <br></br>
+        <select
+            id="language"
+            value={languageId ?? ""}
+            onChange={(e) => setLanguageId(e.target.value ? Number(e.target.value) : null)}
+            style={{ padding: "0.5rem", marginTop: "0.25rem" }}
+        >
+            <option value="">Select a Language</option>
+            {filterOptions.cardLanguages.map((language) => (
+                <option key={language.id} value={language.id}>
+                    {language.name}
+                </option>
+            ))}
+        </select>
+      </div>
+
+      <div style={{ marginTop: "1rem" }}>
         <label htmlFor="location">Location:</label>
         <br></br>
         <select
@@ -286,20 +304,6 @@ export default function AddCardPage() {
                 </option>
             ))}
         </select>
-      </div>
-
-      <div style={{ marginTop: "1rem" }}>
-        <label htmlFor="cardFiles">Upload Card Image:</label>
-        <br></br>
-        <input
-            id="cardFile"
-            type="file"
-            onChange={(e) => {
-            const file = e.target.files?.[0] ?? null;
-            setCardFile(file);
-            }}
-            style={{ padding: "0.5rem", marginTop: "0.25rem" }}
-        />
       </div>
 
       {errors.length > 0 && (
