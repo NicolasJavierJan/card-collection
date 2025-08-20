@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useFilterOptions } from "@/context/filterOptionsProvider";
 import { getCardImage } from "@/lib/cardImage";
+import { getCardRecommendation } from "@/lib/apiAddCardLocationRecommendation";
 
 export default function AddCardPage() {
   const { filterOptions } = useFilterOptions();
@@ -97,6 +98,9 @@ export default function AddCardPage() {
         locationId,
         imagePath, 
       };
+
+      const recommendation = await getCardRecommendation(newCard);
+      console.log(recommendation);
 
       console.log("Submitting card:", newCard);
 

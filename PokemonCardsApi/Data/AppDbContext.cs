@@ -18,6 +18,7 @@ public class AppDbContext : DbContext
     public DbSet<PokemonTrainer> PokemonTrainers { get; set; }
     public DbSet<TrainerSubtype> TrainerSubtypes { get; set; }
     public DbSet<VariantType> VariantTypes { get; set; }
+    public DbSet<CardSetLocation> CardSetLocations { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -26,10 +27,14 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<EnergySubtype>().ToTable("energy_subtypes");
         modelBuilder.Entity<CardLanguage>().ToTable("card_languages");
         modelBuilder.Entity<Location>().ToTable("locations");
+        modelBuilder.Entity<Location>()
+            .Property(l => l.Type)
+            .HasConversion<string>();
         modelBuilder.Entity<PokemonCard>().ToTable("pokemon_cards");
         modelBuilder.Entity<PokemonSpecies>().ToTable("pokemon_species");
         modelBuilder.Entity<PokemonTrainer>().ToTable("pokemon_trainers");
         modelBuilder.Entity<TrainerSubtype>().ToTable("trainer_subtypes");
         modelBuilder.Entity<VariantType>().ToTable("variant_types");
+        modelBuilder.Entity<CardSetLocation>().ToTable("card_set_locations");
     }
 }
