@@ -9,7 +9,13 @@ export async function getCardImage(languageCode: string, setCode: string, cardNu
     }
 
     const data = await res.json();
-    return data.imageUrl; 
+
+    let imageUrl: string = data.imageUrl || "";
+    if (imageUrl.startsWith("/static-images")) {
+      imageUrl = imageUrl.replace("/static-images", "");
+    }
+
+    return imageUrl; 
   } catch (error) {
     console.error("Error fetching card image:", error);
     return null;

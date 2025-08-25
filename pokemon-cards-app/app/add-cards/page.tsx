@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useFilterOptions } from "@/context/filterOptionsProvider";
 import { getCardImage } from "@/lib/cardImage";
 import { getCardRecommendation } from "@/lib/apiAddCardLocationRecommendation";
+import AddCardModal from "@/components/AddCardModal";
 
 export default function AddCardPage() {
   const { filterOptions } = useFilterOptions();
@@ -19,8 +20,12 @@ export default function AddCardPage() {
   const [firstEditionId, setFirstEditionId] = useState<number | null>(0);
   const [languageId, setLanguageId] = useState<number | null>(null);
   const [locationId, setLocationId] = useState<number | null>(null);
+  const [newCard, setNewCard] = useState<any | null>(null);
+  const [recommendation, setRecommendation] = useState<string>("");
 
   const [errors, setErrors] = useState<string[]>([]);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     if (cardTypeId === 1) { 
@@ -86,23 +91,35 @@ export default function AddCardPage() {
       const newCard = {
         cardName,
         cardTypeId,
+        cardTypeName: filterOptions!.cardTypes.find(t => t.id === cardTypeId)?.name,
         pokemonSpeciesId,
+        pokemonSpeciesName: filterOptions!.pokemonSpecies.find(s => s.id === pokemonSpeciesId)?.name,
         variantTypeId,
+        variantTypeName: filterOptions!.variantTypes.find(v => v.id === variantTypeId)?.name,
         trainerSubtypeId,
+        trainerSubtypeName: filterOptions!.trainerSubtypes.find(t => t.id === trainerSubtypeId)?.name,
         energySubtypeId,
+        energySubtypeName: filterOptions!.energySubtypes.find(e => e.id === energySubtypeId)?.name,
         pokemonTrainerId,
+        pokemonTrainerName: filterOptions!.pokemonTrainers.find(t => t.id === pokemonTrainerId)?.name,
         cardSetId,
+        cardSetName: filterOptions!.sets.find(s => s.id === cardSetId)?.name,
         cardNumber,
         firstEdition: firstEditionId === 1,
         languageId,
+        languageName: filterOptions!.cardLanguages.find(l => l.id === languageId)?.name,
         locationId,
-        imagePath, 
+        locationName: filterOptions!.locations.find(l => l.id === locationId)?.name,
+        imagePath,
       };
 
-      const recommendation = await getCardRecommendation(newCard);
-      console.log(recommendation);
+      console.log(newCard);
 
-      console.log("Submitting card:", newCard);
+      const recommendation = await getCardRecommendation(newCard);
+      
+      setNewCard(newCard);
+      setRecommendation(recommendation);
+      setIsModalOpen(true);
 
     } catch (err) {
       console.error(err);
@@ -362,6 +379,17 @@ export default function AddCardPage() {
           Submit
         </button>
       </div>
+    
+    {isModalOpen && newCard &&(
+        <AddCardModal
+          card={newCard}
+          recommendation={recommendation}
+          locations={filterOptions.locations}
+          locationId={locationId}
+          onLocationChange={setLocationId}
+          onClose={() => setIsModalOpen(false)}
+        />
+    )} 
     </form>
   );
 }
