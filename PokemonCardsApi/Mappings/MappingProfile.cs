@@ -16,7 +16,7 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.PokemonSpecies!.Name))
             .ForMember(dest => dest.ImagePath, opt => opt.MapFrom(src => src.ImagePath))
             .ForMember(dest => dest.IsMissing, opt => opt.Ignore());
-        
+
         CreateMap<CardSet, CardSetDto>();
 
         CreateMap<CardType, CardTypeDto>();
@@ -34,5 +34,7 @@ public class MappingProfile : Profile
         CreateMap<EnergySubtype, EnergySubtypeDto>();
 
         CreateMap<PokemonTrainer, PokemonTrainerDto>();
+
+        CreateMap<NewCardDto, PokemonCard>();
     }
 }

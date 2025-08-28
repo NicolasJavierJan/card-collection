@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 
 const baseUrl = process.env.NEXT_PUBLIC_IMAGE_BASE_URL;
+const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 type Location = {
   id: number;
@@ -24,7 +25,71 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
   onLocationChange,
   onClose,
 }) => {
+
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
   if (!card) return null;
+
+  const handleSubmit = async () => {
+    if (!locationId) {
+      setError("Please select a location before submitting.");
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+    setMessage(null);
+
+    try {
+      const newCard = {
+        cardName: card.cardName,
+        pokemonSpeciesId: card.pokemonSpeciesId,
+        variantTypeId: card.variantTypeId,
+        cardTypeId: card.cardTypeId,
+        cardSetId: card.cardSetId,
+        cardNumber: Number(card.cardNumber),
+        firstEdition: card.firstEdition,
+        locationId: locationId,
+        trainerSubtypeId: card.trainerSubtypeId,
+        energySubtypeId: card.energySubtypeId,
+        pokemonTrainerId: card.pokemonTrainerId,
+        cardLanguageId: card.languageId,
+        imagePath: card.imagePath,
+      };
+
+      console.log(newCard);
+
+      const res = await fetch(
+        `${apiUrl}/api/cards`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json"},
+          body: JSON.stringify(newCard),
+        }
+      );
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.message || "Failed to save card.");
+      }
+
+      setMessage(
+        `Card "${card.cardName}" - ${card.cardSetName} - ${
+          locations.find((loc) => loc.id === locationId)?.name ?? "Unknown"
+        } was saved successfully!`
+      );
+
+      setTimeout(() => {
+        onClose();
+      }, 2000);
+    } catch (err: any) {
+      setError(`There was an error: ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -81,12 +146,22 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
           </select>
         </div>
 
-        <div className="flex justify-end">
+        {error && <div className="text-red-600 mb-2">{error}</div>}
+        {message && <div className="text-green-600 mb-2">{message}</div>}
+
+        <div className="flex justify-end gap-2">
           <button
             onClick={onClose}
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
           >
             Close
+          </button>
+          <button
+            onClick={handleSubmit}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+            disabled={loading}
+          >
+            {loading ? "Saving..." : "Submit"}
           </button>
         </div>
       </div>
