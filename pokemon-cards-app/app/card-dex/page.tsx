@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { fetchRecommendations } from "@/lib/apiCardDexRecommendations";
 import RecommendationModal from "@/components/RecommendationModal";
 import { PokemonCard } from "@/models/PokemonCard";
+import { blacklistCard } from "@/lib/apiCardDexRecommendations";
 
 export default function CardDexPage(){
     const [cards, setCards] = useState<CardDex[]>([]);
@@ -33,6 +34,23 @@ export default function CardDexPage(){
     cursor: "pointer",
     fontSize: "0.95rem",
     transition: "background 0.2s",
+  };
+
+  const handleBlacklist = async (cardId : string) => {
+    try {
+      await blacklistCard(cardId);
+      setRecommendedCards((prev) => {
+          const updated = prev.filter((c) => c.id !== cardId);
+          if (updated.length === 0) setHasRecommendations(false);
+          return updated;
+        });
+
+      if (currentIndex >= recommendedCards.length -1){
+        setCurrentIndex(0);
+      }
+    } catch (err : any){
+      console.error("Failed to blacklist card", err);
+    }
   };
 
     useEffect(() => {
@@ -166,7 +184,11 @@ export default function CardDexPage(){
                 <>
                   <button style={buttonStyle}>Move</button>
                   <button style={buttonStyle}>Dismiss</button>
-                  <button style={buttonStyle}>Blacklist</button>
+                  <button 
+                  style={buttonStyle}
+                  onClick={() => handleBlacklist(recommendedCards[currentIndex].id)}
+                  >
+                    Blacklist</button>
                 </>
               }
             />

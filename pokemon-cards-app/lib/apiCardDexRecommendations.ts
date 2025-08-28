@@ -9,3 +9,14 @@ export const fetchRecommendations = async () => {
 
     return await res.json();
 }
+
+export const blacklistCard = async (cardId: string) : Promise<void> => {
+    const res = await fetch(`${API_BASE}/api/cardDex/recommendations/blacklist?cardId=${cardId}`, {
+        method: "POST",
+    })
+
+    if (!res.ok) {
+        throw new Error("Failed to blacklist card!");
+    }
+}
+

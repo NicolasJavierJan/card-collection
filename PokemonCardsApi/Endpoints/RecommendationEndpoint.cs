@@ -35,6 +35,7 @@ public static class CardRecommendationEndpoint
                 .AnyAsync(c =>
                     c.CardSetId == card.CardSetId &&
                     c.CardNumber == card.CardNumber &&
+                    c.Location != null &&
                     c.Location.Type == LocationType.Binder
                 );
 

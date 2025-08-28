@@ -19,9 +19,12 @@ public class AppDbContext : DbContext
     public DbSet<TrainerSubtype> TrainerSubtypes { get; set; }
     public DbSet<VariantType> VariantTypes { get; set; }
     public DbSet<CardSetLocation> CardSetLocations { get; set; }
+    public DbSet<RecommendationsBlacklistedCard> RecommendationsBlacklistedCards { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         modelBuilder.Entity<CardSet>().ToTable("card_sets");
         modelBuilder.Entity<CardType>().ToTable("card_types");
         modelBuilder.Entity<EnergySubtype>().ToTable("energy_subtypes");
@@ -36,5 +39,12 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<TrainerSubtype>().ToTable("trainer_subtypes");
         modelBuilder.Entity<VariantType>().ToTable("variant_types");
         modelBuilder.Entity<CardSetLocation>().ToTable("card_set_locations");
+
+        modelBuilder.Entity<RecommendationsBlacklistedCard>(entity =>
+        {
+            entity.ToTable("recommendations_blacklisted_cards");
+            entity.HasKey(e => e.CardId);
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("now()");
+        });
     }
 }

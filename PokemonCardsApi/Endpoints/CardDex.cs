@@ -8,11 +8,11 @@ public static class CardDex
 {
     public static void MapCardDex(this WebApplication app)
     {
-        app.MapGet("/api/cardDex", async(
+        app.MapGet("/api/cardDex", async (
             AppDbContext db,
             [FromServices] IMapper mapper,
             int limit = 20,
-            int offset = 0) => 
+            int offset = 0) =>
         {
             const int CardDexLocationId = 2;
             const int CardTypeId = 1;
@@ -21,17 +21,17 @@ public static class CardDex
             var allSpecies = await db.PokemonSpecies
                 .Select(s => new { s.Id, s.Name })
                 .ToListAsync();
-            
+
             var cardDexCards = await db.PokemonCards
                 .Where(c => c.LocationId == CardDexLocationId && c.CardTypeId == CardTypeId)
                 .Include(c => c.PokemonSpecies)
                 .ToListAsync();
-            
+
             var cardsBySpecies = cardDexCards
                 .Where(c => c.PokemonSpeciesId.HasValue)
                 .GroupBy(c => c.PokemonSpeciesId!.Value)
                 .ToDictionary(g => g.Key, g => g.First());
-            
+
             var results = new List<CardDexEntryDto>();
 
             foreach (var species in allSpecies)
@@ -74,12 +74,17 @@ public static class CardDex
                 .Where(id => id != null)
                 .Distinct()
                 .ToListAsync();
-            
+
+            var blacklistedCards = await db.RecommendationsBlacklistedCards
+                .Select(b => b.CardId)
+                .ToListAsync();
+
             var recommendations = await db.PokemonCards
                 .Where(c => c.LocationId != CardDexLocationId &&
                             c.CardTypeId == CardTypeId &&
                             c.PokemonSpeciesId != null &&
-                            !speciesInDex.Contains(c.PokemonSpeciesId.Value))
+                            !speciesInDex.Contains(c.PokemonSpeciesId.Value) &&
+                            !blacklistedCards.Contains(c.Id))
                 .Include(c => c.PokemonSpecies)
                 .Include(c => c.Location)
                 .Include(c => c.CardSet)
@@ -92,8 +97,25 @@ public static class CardDex
                 .ToListAsync();
 
             var mapped = mapper.Map<List<PokemonCardDto>>(recommendations);
-            
+
             return Results.Ok(mapped);
+        });
+
+        app.MapPost("/api/cardDex/recommendations/blacklist", async (Guid cardId, AppDbContext db) =>
+        {
+            var exists = await db.RecommendationsBlacklistedCards
+                .AnyAsync(b => b.CardId == cardId);
+
+            if (!exists)
+            {
+                db.RecommendationsBlacklistedCards.Add(new RecommendationsBlacklistedCard
+                {
+                    CardId = cardId
+                });
+                await db.SaveChangesAsync();
+            }
+
+            return Results.Ok();
         });
     }
 }
