@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
 using AutoMapper;
+using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Http.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +32,12 @@ builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddControllers();
 
 builder.Configuration.AddUserSecrets<Program>();
+
+builder.Services.Configure<JsonOptions>(options =>
+{
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
+
 
 var app = builder.Build();
 

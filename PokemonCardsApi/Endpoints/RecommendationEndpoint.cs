@@ -13,11 +13,12 @@ public static class CardRecommendationEndpoint
             if (card == null)
                 return Results.BadRequest(new { error = "Invalid card data" });
 
-            // 1. CardDex check (only Pokémon)
             if (card.PokemonSpeciesId.HasValue)
             {
                 bool existsInDex = await db.PokemonCards
-                    .AnyAsync(c => c.PokemonSpeciesId == card.PokemonSpeciesId.Value);
+                    .Include(c => c.Location)
+                    .AnyAsync(c => c.PokemonSpeciesId == card.PokemonSpeciesId.Value &&
+                    c.Location!.Type == LocationType.CardDex);
 
                 if (!existsInDex)
                 {
@@ -29,12 +30,12 @@ public static class CardRecommendationEndpoint
                 }
             }
 
-            // 2. Check if card already exists in the Binder
             bool existsInBinder = await db.PokemonCards
                 .Include(c => c.Location)
                 .AnyAsync(c =>
                     c.CardSetId == card.CardSetId &&
                     c.CardNumber == card.CardNumber &&
+                    c.PokemonSpeciesId == card.PokemonSpeciesId && 
                     c.Location != null &&
                     c.Location.Type == LocationType.Binder
                 );
@@ -55,12 +56,11 @@ public static class CardRecommendationEndpoint
                         : "This card isn't in any binder yet. Recommend placing it in a binder."
                 });
             }
-                        
-            // Card is a duplicate; check which box contains this set
+            
             var boxLocation = await db.CardSetLocations
                 .Where(csl => csl.CardSetId == card.CardSetId)
                 .Select(csl => csl.Location)
-                .Where(loc => loc.Type == LocationType.Box) 
+                .Where(loc => loc.Type == LocationType.Box)
                 .FirstOrDefaultAsync();
 
             return Results.Ok(new

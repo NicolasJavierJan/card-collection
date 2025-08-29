@@ -11,12 +11,12 @@ public static class CardSetEndpoints
         app.MapGet("/api/card-sets", async (
             AppDbContext db,
             [FromServices] IMapper mapper
-        ) => 
+        ) =>
         {
             var cardSets = await db.CardSets
                 .OrderBy(c => c.Name)
                 .ToListAsync();
-            
+
             var dtoCardSets = mapper.Map<List<CardSetDto>>(cardSets);
 
             return Results.Ok(dtoCardSets);
@@ -25,10 +25,10 @@ public static class CardSetEndpoints
         app.MapGet("/api/card-sets/{setId:int}", async (
             int setId,
             AppDbContext db
-        ) => 
+        ) =>
         {
             const String CardBackPlaceholderPath = "/back/card-back.png";
-            
+
             var totalCards = await db.CardSets
                 .Where(s => s.Id == setId)
                 .Select(s => s.CardTotal)
@@ -44,7 +44,7 @@ public static class CardSetEndpoints
                 .Include(c => c.CardLanguage)
                 .OrderBy(c => c.CardNumber)
                 .ToListAsync();
-            
+
             var checklist = new List<object>();
 
             for (int num = 1; num <= totalCards; num++)
@@ -107,5 +107,58 @@ public static class CardSetEndpoints
                 Checklist = checklist
             });
         });
+
+        app.MapPost("/api/card-sets", async (
+            [FromBody] CreateCardSetRequest request,
+            AppDbContext db
+        ) =>
+        {
+            var newSet = new CardSet
+            {
+                Name = request.Name,
+                Code = request.Code,
+                CardTotal = request.TotalCards
+            };
+
+            db.CardSets.Add(newSet);
+            await db.SaveChangesAsync();
+
+            var locationsToLink = new List<CardSetLocation>();
+
+            if (request.BinderLocationId.HasValue)
+            {
+                locationsToLink.Add(new CardSetLocation
+                {
+                    CardSetId = newSet.Id,
+                    LocationId = request.BinderLocationId.Value
+                });
+            }
+
+            if (request.BoxLocationId.HasValue)
+            {
+                locationsToLink.Add(new CardSetLocation
+                {
+                    CardSetId = newSet.Id,
+                    LocationId = request.BoxLocationId.Value
+                });
+            }
+
+            if (locationsToLink.Any())
+            {
+                db.CardSetLocations.AddRange(locationsToLink);
+                await db.SaveChangesAsync();
+            }
+
+            return Results.Created($"/api/card-sets/{newSet.Id}", newSet);
+        });
+    }
+    
+    public record CreateCardSetRequest
+    {
+        public string Name { get; init; } = string.Empty;
+        public string Code { get; init; } = string.Empty;
+        public int TotalCards { get; init; }
+        public int? BinderLocationId { get; init; }
+        public int? BoxLocationId { get; init; }
     }
 }
