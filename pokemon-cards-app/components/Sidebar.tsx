@@ -46,7 +46,7 @@ useEffect(() => {
         + Add Cards
       </Link>
 
-            <Link
+      <Link
         href="/add-sets"
         style={{
           display: "block",
@@ -61,6 +61,23 @@ useEffect(() => {
         }}
       >
         + Add Sets
+      </Link>
+
+      <Link
+        href="/add-locations"
+        style={{
+          display: "block",
+          backgroundColor: "#0070f3",
+          color: "white",
+          textAlign: "center",
+          padding: "0.75rem 1rem",
+          borderRadius: "5px",
+          fontWeight: "bold",
+          textDecoration: "none",
+          cursor: "pointer",
+        }}
+      >
+        + Add Locations
       </Link>
 
       <nav>
