@@ -27,6 +27,7 @@ export default function SetPage() {
     setLoading(true);
     setError(null);
 
+    // Put in it's own class, we are not savages! TODO
     fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/card-sets/${id}`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to load set");

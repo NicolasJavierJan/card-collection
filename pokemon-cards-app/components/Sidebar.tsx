@@ -80,6 +80,23 @@ useEffect(() => {
         + Add Locations
       </Link>
 
+            <Link
+        href="/move-sets"
+        style={{
+          display: "block",
+          backgroundColor: "#0070f3",
+          color: "white",
+          textAlign: "center",
+          padding: "0.75rem 1rem",
+          borderRadius: "5px",
+          fontWeight: "bold",
+          textDecoration: "none",
+          cursor: "pointer",
+        }}
+      >
+        Move Sets
+      </Link>
+
       <nav>
         <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
 

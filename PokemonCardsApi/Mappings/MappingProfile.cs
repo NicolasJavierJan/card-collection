@@ -36,5 +36,7 @@ public class MappingProfile : Profile
         CreateMap<PokemonTrainer, PokemonTrainerDto>();
 
         CreateMap<NewCardDto, PokemonCard>();
+
+        CreateMap<CardSetLocation, CardSetLocationDto>();
     }
 }

@@ -55,7 +55,6 @@ public static class CardSetEndpoints
 
                 if (!matchingCards.Any())
                 {
-                    // No cards owned for this number
                     checklist.Add(new
                     {
                         CardNumber = num,

@@ -72,7 +72,8 @@ app.MapCardFilters();
 app.MapCardsEndpoints();
 app.MapCardImageEndpoint();
 app.MapCardRecommendationEndpoint();
-app.MapLocationEndpoints();  
+app.MapLocationEndpoints();
+app.MapCardSetLocationsEndpoints();
 app.MapControllers();
 
 app.Run();
