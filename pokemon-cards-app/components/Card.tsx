@@ -1,8 +1,8 @@
 import React from "react";
-import { PokemonCard } from "../models/PokemonCard";
+import { PokemonCardCollection } from "../models/PokemonCardCollection";
 
 type Props = {
-  card: PokemonCard;
+  card: PokemonCardCollection;
   actions?: React.ReactNode;
 };
 
@@ -11,99 +11,58 @@ const baseUrl = process.env.NEXT_PUBLIC_IMAGE_BASE_URL;
 export default function Card({ card, actions }: Props) {
   return (
     <div
-      style={{
-        width: "240px",
-        boxSizing: "border-box",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        transition: "transform 0.2s ease-in-out",
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = "scale(1.02)";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = "scale(1)";
-      }}
+      className="
+        relative
+        w-full max-w-[220px]
+        flex flex-col items-center
+        transition-transform duration-200
+        hover:scale-[1.02]
+      "
     >
-      
+      {/* First Edition Badge */}
+      {card.firstEdition && (
+        <span className="absolute top-2 left-2 bg-yellow-400 text-black text-xs font-bold px-2 py-1 rounded shadow">
+          1st
+        </span>
+      )}
+
       {card.imagePath && (
         <img
           src={`${baseUrl}${card.imagePath}`}
           alt={card.cardName}
-          style={{
-            width: "240px",
-            objectFit: "contain",
-            display: "block",
-            borderRadius: "6px",
-          }}
+          className="w-full rounded-lg object-contain"
         />
       )}
 
-      
-      <div
-        style={{
-          width: "100%",
-          padding: "0.5rem 0.5rem 0",
-          boxSizing: "border-box",
-        }}
-      >
-        
-        <h2
-          style={{
-            fontSize: "1rem",
-            fontWeight: "600",
-            margin: "0 0 0.4rem",
-            textAlign: "center",
-            wordBreak: "break-word",
-          }}
-        >
+      <div className="w-full px-2 pt-2">
+        {/* Name */}
+        <h2 className="text-center text-base font-semibold text-blue-700 leading-tight">
           {card.cardName}
         </h2>
 
-        
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            fontSize: "0.8rem",
-            fontWeight: 500,
-            color: "#444",
-            marginBottom: "0.6rem",
-            lineHeight: 1.3,
-            width: "100%",
-            boxSizing: "border-box",
-          }}
-        >
-          <div style={{ textAlign: "left" }}>
-            <div>#{card.cardNumber}</div>
-            <div>{card.setName}</div>
+        {/* Info row */}
+        <div className="flex justify-between text-sm text-gray-600 mt-1">
+        {/* Left column */}
+        <div>
+          <div className="font-medium text-gray-700">
+            #{card.cardNumber}
           </div>
-
-          {card.locationName && (
-            <div
-              style={{
-                textAlign: "right",
-                fontStyle: "italic",
-                fontSize: "0.75rem",
-                color: "#666",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {card.locationName}
-            </div>
-          )}
+          <div className="text-xs text-gray-600">
+            {card.setName}
+          </div>
         </div>
 
+        {/* Right column */}
+        <div className="text-right text-xs italic text-gray-500 whitespace-nowrap">
+          {card.locationName && <div>{card.locationName}</div>}
+          <div className="text-gray-400">{card.languageName}</div>
+        </div>
+      </div>
+
+
+        {/* Actions */}
         {actions && (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              gap: "0.4rem",
-              width: "100%",
-            }}
-          >
+          <div className="flex gap-2 mt-2 justify-between">
             {actions}
           </div>
         )}

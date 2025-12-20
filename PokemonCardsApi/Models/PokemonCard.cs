@@ -16,6 +16,7 @@ public class PokemonCard
     public int? PokemonTrainerId { get; set; }
     public required int CardLanguageId { get; set; }
     public string? ImagePath { get; set; }
+    public DateTime AddedAt { get; set;}
 
     public CardType? CardType { get; set; }
     public CardSet? CardSet { get; set; }

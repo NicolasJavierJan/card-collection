@@ -132,51 +132,88 @@ export default function AddCardPage() {
     return <p>Loading species...</p>;
   }
 
+  const fieldStyle = {
+      marginBottom: "1.3rem",
+      display: "flex",
+      flexDirection: "column" as const,
+  };
+
+  const labelStyle = {
+    fontWeight: "600",
+    marginBottom: "0.4rem",
+    color: "#0050b8",
+  };
+
+  const inputStyle = {
+    padding: "0.65rem",
+    border: "1px solid #c6d4e0",
+    background: "white",
+    borderRadius: "6px",
+    fontSize: "1rem",
+  };
+
+  const disabledStyle = {
+    ...inputStyle,
+    background: "#f0f0f0",
+    color: "#888",
+    cursor: "not-allowed",
+  };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h1 style={{ fontSize: "1.5rem" }}>Add Cards</h1>
+    <form onSubmit={handleSubmit}
+      style={{
+        margin: "0 auto",
+        padding: "2rem",
+      }}
+    >
 
-      <div style={{ marginTop: "1rem" }}>
-        <label htmlFor="cardName">Card Name:</label>
-        <br></br>
+      <h1 style={{ fontSize: "1.8rem", marginBottom: "1.5rem"}}>
+        Add Cards
+      </h1>
+
+      <div style={fieldStyle}>
+        <label htmlFor="cardName" style={labelStyle}>
+          Card Name
+        </label>
         <input
           id="cardName"
           type="text"
           value={cardName}
           onChange={(e) => setCardName(e.target.value)}
           placeholder="Dragonite EX"
-          style={{ padding: "0.5rem", marginTop: "0.25rem" }}
+          style={inputStyle}
         />
       </div>
 
-      <div style={{ marginTop: "1rem" }}>
-        <label htmlFor="cardType">Card Type:</label>
-        <br></br>
-        <select
-            id="cardType"
-            value={cardTypeId ?? ""}
-            onChange={(e) => setCardTypeId(e.target.value ? Number(e.target.value) : null)}
-            style={{ padding: "0.5rem", marginTop: "0.25rem" }}
+      <div style={fieldStyle}>
+        <label htmlFor="cardType" style={labelStyle}>
+          Card Type
+        </label>
+        <select 
+          id="cardType"
+          value={cardTypeId ?? ""}
+          onChange={(e) => setCardTypeId(e.target.value ? Number(e.target.value) : null)}
+          style={inputStyle}
         >
-            <option value="">Select a Card Type</option>
+          <option value="">Select a Card Type</option>
             {filterOptions.cardTypes.map((type) => (
-                <option key={type.id} value={type.id}>
-                    {type.name}
-                </option>
-            ))}
+            <option key={type.id} value={type.id}>
+              {type.name}
+            </option>
+          ))}
         </select>
       </div>
 
-      <div style={{ marginTop: "1rem" }}>
-        <label htmlFor="pokemonSpecies">Pokemon Species:</label>
-        <br></br>
-        <select
+      <div style={fieldStyle}>
+        <label htmlFor="pokemonSpecies" style={labelStyle}>
+          Pokemon Species
+        </label>
+        <select 
           id="pokemonSpecies"
           disabled={cardTypeId !== 1}
           value={pokemonSpeciesId ?? ""}
-          onChange={(e) => setPokemonSpeciesId(e.target.value ? Number(e.target.value) : null)}
-          style={{ padding: "0.5rem", marginTop: "0.25rem" }}
+          onChange={(e) => setPokemonSpeciesId(e.target.value ? Number(e.target.value) : null )}
+          style={cardTypeId == 1 ? inputStyle : disabledStyle} 
         >
           <option value="">Select a Pokemon Species</option>
           {filterOptions.pokemonSpecies.map((species) => (
@@ -187,53 +224,54 @@ export default function AddCardPage() {
         </select>
       </div>
 
-      <div style={{ marginTop: "1rem" }}>
-        <label htmlFor="variantType">Variant Type:</label>
-        <br></br>
+      <div style={fieldStyle}>
+        <label htmlFor="variantType" style={labelStyle}>
+          Variant Type
+        </label>
         <select
-            id="variantType"
-            disabled={cardTypeId !== 1}
-            value={variantTypeId ?? ""}
-            onChange={(e) => setVariantTypeId(e.target.value ? Number(e.target.value) : null)}
-            style={{ padding: "0.5rem", marginTop: "0.25rem" }}
+          id="variantType"
+          disabled={cardTypeId !== 1}
+          value={variantTypeId ?? ""}
+          onChange={(e) => setVariantTypeId(e.target.value ? Number(e.target.value) : null )}
+          style={cardTypeId == 1 ? inputStyle : disabledStyle }
         >
-            <option value="">Select a Variant Type</option>
-            {filterOptions.variantTypes.map((variant) => (
-                <option key={variant.id} value={variant.id}>
-                    {variant.name}
-                </option>
-            ))}
+          <option value="">Select a Variant Type</option>
+          {filterOptions.variantTypes.map((variants) => (
+            <option key={variants.id} value={variants.id}>
+              {variants.name}
+            </option>
+          ))}
         </select>
       </div>
 
-      <div style={{ marginTop: "1rem" }}>
-        <label htmlFor="trainerSubtype">Trainer Subtype:</label>
-        <br></br>
-        <select
-            id="trainerSubtype"
-            disabled={cardTypeId !== 2}
-            value={trainerSubtypeId ?? ""}
-            onChange={(e) => setTrainerSubtypeId(e.target.value ? Number(e.target.value) : null)}
-            style={{ padding: "0.5rem", marginTop: "0.25rem" }}
+      <div style={fieldStyle}>
+        <label htmlFor="trainerSubtype" style={labelStyle}>
+          Trainer Subtype
+        </label>
+        <select 
+          id="trainerSubtype"
+          disabled={cardTypeId !== 2}
+          value={trainerSubtypeId ?? ""}
+          onChange={(e) => setTrainerSubtypeId(e.target.value ? Number(e.target.value) : null)}
+          style={cardTypeId == 2 ? inputStyle : disabledStyle}
         >
-            <option value="">Select a Trainer Subtype</option>
-            {filterOptions.trainerSubtypes.map((subtype) => (
-                <option key={subtype.id} value={subtype.id}>
-                    {subtype.name}
-                </option>
-            ))}
+          <option value="">Select a Trainer Subtype</option>
+          {filterOptions.trainerSubtypes.map((subtype) => (
+            <option key={subtype.id} value={subtype.id}>
+              {subtype.name}
+            </option>
+          ))}
         </select>
       </div>
 
-      <div style={{ marginTop: "1rem" }}>
-        <label htmlFor="energySubtype">Energy Subtype:</label>
-        <br></br>
+      <div style={fieldStyle}>
+        <label htmlFor="energySubtype" style={labelStyle}>Energy Subtype</label>
         <select
             id="energySubtype"
             disabled={cardTypeId !== 3}
             value={energySubtypeId ?? ""}
             onChange={(e) => setEnergySubtypeId(e.target.value ? Number(e.target.value) : null)}
-            style={{ padding: "0.5rem", marginTop: "0.25rem" }}
+            style={cardTypeId == 3 ? inputStyle : disabledStyle}
         >
             <option value="">Select an Energy Subtype</option>
             {filterOptions.energySubtypes.map((subtype) => (
@@ -244,15 +282,14 @@ export default function AddCardPage() {
         </select>
       </div>
 
-      <div style={{ marginTop: "1rem" }}>
-        <label htmlFor="pokemonTrainer">Pokemon Trainer:</label>
-        <br></br>
+      <div style={fieldStyle}>
+        <label htmlFor="pokemonTrainer" style={labelStyle}>Pokemon Trainer</label>
         <select
             id="pokemonTrainer"
             disabled={cardTypeId !== 1}
             value={pokemonTrainerId ?? ""}
             onChange={(e) => setPokemonTrainerId(e.target.value ? Number(e.target.value) : null)}
-            style={{ padding: "0.5rem", marginTop: "0.25rem" }}
+            style={cardTypeId == 1 ? inputStyle : disabledStyle}
         >
             <option value="">Select a Pokemon Trainer</option>
             {filterOptions.pokemonTrainers.map((trainer) => (
@@ -263,14 +300,13 @@ export default function AddCardPage() {
         </select>
       </div>
 
-      <div style={{ marginTop: "1rem" }}>
-        <label htmlFor="cardSet">Card Set:</label>
-        <br></br>
+      <div style={fieldStyle}>
+        <label htmlFor="cardSet" style={labelStyle}>Card Set</label>
         <select
             id="cardSet"
             value={cardSetId ?? ""}
             onChange={(e) => setCardSetId(e.target.value ? Number(e.target.value) : null)}
-            style={{ padding: "0.5rem", marginTop: "0.25rem" }}
+            style={inputStyle}
         >
             <option value="">Select a Card Set</option>
             {filterOptions.sets.map((set) => (
@@ -281,41 +317,38 @@ export default function AddCardPage() {
         </select>
       </div>
 
-      <div style={{ marginTop: "1rem" }}>
-        <label htmlFor="cardNumber">Card Number:</label>
-        <br></br>
+      <div style={fieldStyle}>
+        <label htmlFor="cardNumber" style={labelStyle}>Card Number</label>
         <input
           id="cardName"
           type="number"
           placeholder="147"
           value={cardNumber}
           onChange={(e) => setCardNumber(e.target.value)}
-          style={{ padding: "0.5rem", marginTop: "0.25rem" }}
+          style={inputStyle}
         />
       </div>
 
-      <div style={{ marginTop: "1rem" }}>
-        <label htmlFor="firstEdition">First Edition?</label>
-        <br></br>
+      <div style={fieldStyle}>
+        <label htmlFor="firstEdition" style={labelStyle}>First Edition?</label>
         <select
             id="firstEdition"
             value={firstEditionId ?? ""}
             onChange={(e) => setFirstEditionId(e.target.value ? Number(e.target.value) : null)}
-            style={{ padding: "0.5rem", marginTop: "0.25rem" }}
+            style={inputStyle}
         >
             <option value="0">False</option>
             <option value="1">True</option>
         </select>
       </div>
 
-      <div style={{ marginTop: "1rem" }}>
-        <label htmlFor="language">Language:</label>
-        <br></br>
+      <div style={fieldStyle}>
+        <label htmlFor="language" style={labelStyle}>Language:</label>
         <select
             id="language"
             value={languageId ?? ""}
             onChange={(e) => setLanguageId(e.target.value ? Number(e.target.value) : null)}
-            style={{ padding: "0.5rem", marginTop: "0.25rem" }}
+            style={inputStyle}
         >
             <option value="">Select a Language</option>
             {filterOptions.cardLanguages.map((language) => (
@@ -326,21 +359,20 @@ export default function AddCardPage() {
         </select>
       </div>
 
-      <div style={{ marginTop: "1rem" }}>
-        <label htmlFor="location">Location:</label>
-        <br></br>
+      <div style={fieldStyle}>
+        <label htmlFor="location" style={labelStyle}>Location:</label>
         <select
             id="location"
             value={locationId ?? ""}
             onChange={(e) => setLocationId(e.target.value ? Number(e.target.value) : null)}
-            style={{ padding: "0.5rem", marginTop: "0.25rem" }}
+            style={inputStyle}
         >
-            <option value="">Select a Location</option>
-            {filterOptions.locations.map((location) => (
-                <option key={location.id} value={location.id}>
-                    {location.name}
-                </option>
-            ))}
+          <option value="">Select a Location</option>
+          {filterOptions.locations.map((location) => (
+              <option key={location.id} value={location.id}>
+                  {location.name}
+              </option>
+          ))}
         </select>
       </div>
 
@@ -368,19 +400,22 @@ export default function AddCardPage() {
         <button
           type="submit"
           style={{
-            padding: "0.75rem 1.5rem",
-            borderRadius: "4px",
+            marginTop: "1.5rem",
+            padding: "0.8rem 1.6rem",
+            borderRadius: "6px",
             border: "none",
-            backgroundColor: "#4caf50",
+            backgroundColor: "#0070f3",
             color: "#fff",
+            fontSize: "1rem",
+            fontWeight: "600",
             cursor: "pointer",
           }}
         >
           Submit
         </button>
       </div>
-    
-    {isModalOpen && newCard &&(
+
+      {isModalOpen && newCard && (
         <AddCardModal
           card={newCard}
           recommendation={recommendation}
@@ -389,7 +424,7 @@ export default function AddCardPage() {
           onLocationChange={setLocationId}
           onClose={() => setIsModalOpen(false)}
         />
-    )} 
+      )}
     </form>
   );
 }

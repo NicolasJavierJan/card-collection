@@ -2,196 +2,199 @@
 
 import { useState, useEffect } from "react";
 import { FilterOptions } from "@/lib/apiFilters";
-import { fetchFilterOptions } from "@/lib/apiFilters";
 
 type Props = {
-    filterOptions: FilterOptions
-    onFilterChange: (filters: { setId: number | null; cardTypeId: number | null, locationId: number | null,
-      pokemonSpeciesId: number | null, variantTypeId: number | null, trainerSubtypeId: number | null, energySubtypeId: number | null,
-      pokemonTrainerId: number | null, cardLanguageId: number | null
-     }) => void;
+  filterOptions: FilterOptions;
+  onFilterChange: (filters: {
+    setId: number | null;
+    cardTypeId: number | null;
+    locationId: number | null;
+    pokemonSpeciesId: number | null;
+    variantTypeId: number | null;
+    trainerSubtypeId: number | null;
+    energySubtypeId: number | null;
+    pokemonTrainerId: number | null;
+    cardLanguageId: number | null;
+  }) => void;
 };
 
-export default function CardFilters({ filterOptions, onFilterChange } : Props){
-    const [selectedSetId, setSelectedSetId] = useState<number | null>(null);
-    const [selectedCardTypeId, setSelectedCardTypeId] = useState<number | null>(null);
-    const [selectedLocationId, setSelectedLocationId] = useState<number | null>(null);
-    const [selectedPokemonSpeciesId, setSelectedPokemonSpeciesId] = useState<number | null>(null);
-    const [selectedVariantTypeId, setSelectedVariantTypeId] = useState<number | null>(null);
-    const [selectedTrainerSubtypeId, setSelectedTrainerSubtypeId] = useState<number | null>(null);
-    const [selectedEnergySubtypeId, setSelectedEnergySubtypeId] = useState<number | null>(null);
-    const [selectedPokemonTrainerId, setSelectedPokemonTrainerId] = useState<number | null>(null);
-    const [selectedCardLanguageId, setSelectedCardLanguageId] = useState<number | null>(null);
+export default function CardFilters({ filterOptions, onFilterChange }: Props) {
+  const [selectedSetId, setSelectedSetId] = useState<number | null>(null);
+  const [selectedCardTypeId, setSelectedCardTypeId] = useState<number | null>(null);
+  const [selectedLocationId, setSelectedLocationId] = useState<number | null>(null);
+  const [selectedPokemonSpeciesId, setSelectedPokemonSpeciesId] = useState<number | null>(null);
+  const [selectedVariantTypeId, setSelectedVariantTypeId] = useState<number | null>(null);
+  const [selectedTrainerSubtypeId, setSelectedTrainerSubtypeId] = useState<number | null>(null);
+  const [selectedEnergySubtypeId, setSelectedEnergySubtypeId] = useState<number | null>(null);
+  const [selectedPokemonTrainerId, setSelectedPokemonTrainerId] = useState<number | null>(null);
+  const [selectedCardLanguageId, setSelectedCardLanguageId] = useState<number | null>(null);
 
-    useEffect(() => {
-        onFilterChange( { 
-            setId: selectedSetId,
-            cardTypeId: selectedCardTypeId,
-            locationId: selectedLocationId,
-            pokemonSpeciesId: selectedPokemonSpeciesId,
-            variantTypeId: selectedVariantTypeId,
-            trainerSubtypeId: selectedTrainerSubtypeId,
-            energySubtypeId: selectedEnergySubtypeId,
-            pokemonTrainerId: selectedPokemonTrainerId,
-            cardLanguageId: selectedCardLanguageId });
-    }, [selectedSetId, selectedCardTypeId, selectedLocationId, selectedPokemonSpeciesId, selectedVariantTypeId,
-        selectedTrainerSubtypeId, selectedEnergySubtypeId, selectedPokemonTrainerId, selectedCardLanguageId
-     ]);
+  useEffect(() => {
+    onFilterChange({
+      setId: selectedSetId,
+      cardTypeId: selectedCardTypeId,
+      locationId: selectedLocationId,
+      pokemonSpeciesId: selectedPokemonSpeciesId,
+      variantTypeId: selectedVariantTypeId,
+      trainerSubtypeId: selectedTrainerSubtypeId,
+      energySubtypeId: selectedEnergySubtypeId,
+      pokemonTrainerId: selectedPokemonTrainerId,
+      cardLanguageId: selectedCardLanguageId,
+    });
+  }, [
+    selectedSetId,
+    selectedCardTypeId,
+    selectedLocationId,
+    selectedPokemonSpeciesId,
+    selectedVariantTypeId,
+    selectedTrainerSubtypeId,
+    selectedEnergySubtypeId,
+    selectedPokemonTrainerId,
+    selectedCardLanguageId,
+  ]);
 
-   return (
-    <div style={{ padding: 20 }}>
-      {filterOptions.sets && (
-        <select
-          value={selectedSetId ?? ""}
-          onChange={(e) =>
-            setSelectedSetId(e.target.value === "" ? null : Number(e.target.value))
-          }
-          style={{ marginBottom: "1rem", padding: "0.5rem", marginRight: "1rem" }}
-        >
-          <option value="">All Card Sets</option>
-          {filterOptions.sets.map((set) => (
-            <option key={set.id} value={set.id}>
-              {set.name}
-            </option>
-          ))}
-        </select>
-      )}
+  return (
+    <div className="bg-white rounded-xl shadow-md p-4 mb-6 border border-gray-200">
+      <h2 className="text-lg font-semibold text-blue-700 mb-4">Filters</h2>
 
-      {filterOptions.cardTypes && (
-        <select
-          value={selectedCardTypeId ?? ""}
-          onChange={(e) =>
-            setSelectedCardTypeId(e.target.value === "" ? null : Number(e.target.value))
-          }
-          style={{ padding: "0.5rem" }}
-        >
-          <option value="">All Card Types</option>
-          {filterOptions.cardTypes.map((type) => (
-            <option key={type.id} value={type.id}>
-              {type.name}
-            </option>
-          ))}
-        </select>
-      )}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 
-      {filterOptions.locations &&(
-        <select 
-          value={selectedLocationId ?? ""}
-          onChange={(e) => 
-            setSelectedLocationId(e.target.value === "" ? null : Number(e.target.value))
-          }
-          style={{padding: "0.5rem" }}
-        >
-          <option value="">All Locations</option>
-          {filterOptions.locations.map((location) => (
-            <option key={location.id} value={location.id}>
-              {location.name}
-            </option>
-          ))}
-        </select>
-      )}
+        {/* Helper reusable select style */}
+        {filterOptions.sets && (
+          <FilterSelect
+            label="Set"
+            value={selectedSetId}
+            onChange={setSelectedSetId}
+            defaultLabel="All Card Sets"
+            options={filterOptions.sets}
+          />
+        )}
 
-      {filterOptions.locations &&(
-        <select 
-          value={selectedPokemonSpeciesId ?? ""}
-          onChange={(e) => 
-            setSelectedPokemonSpeciesId(e.target.value === "" ? null : Number(e.target.value))
-          }
-          style={{padding: "0.5rem" }}
-        >
-          <option value="">All Pokemon</option>
-          {filterOptions.pokemonSpecies.map((species) => (
-            <option key={species.id} value={species.id}>
-              {species.name}
-            </option>
-          ))}
-        </select>
-      )}
+        {filterOptions.cardTypes && (
+          <FilterSelect
+            label="Card Type"
+            value={selectedCardTypeId}
+            onChange={setSelectedCardTypeId}
+            defaultLabel="All Card Types"
+            options={filterOptions.cardTypes}
+          />
+        )}
 
-      {filterOptions.variantTypes &&(
-        <select 
-          value={selectedVariantTypeId ?? ""}
-          onChange={(e) => 
-            setSelectedVariantTypeId(e.target.value === "" ? null : Number(e.target.value))
-          }
-          style={{padding: "0.5rem" }}
-        >
-          <option value="">All Variants</option>
-          {filterOptions.variantTypes.map((variants) => (
-            <option key={variants.id} value={variants.id}>
-              {variants.name}
-            </option>
-          ))}
-        </select>
-      )}
+        {filterOptions.locations && (
+          <FilterSelect
+            label="Location"
+            value={selectedLocationId}
+            onChange={setSelectedLocationId}
+            defaultLabel="All Locations"
+            options={filterOptions.locations}
+          />
+        )}
 
-      {filterOptions.trainerSubtypes &&(
-        <select 
-          value={selectedTrainerSubtypeId ?? ""}
-          onChange={(e) => 
-            setSelectedTrainerSubtypeId(e.target.value === "" ? null : Number(e.target.value))
-          }
-          style={{padding: "0.5rem" }}
-        >
-          <option value="">Trainer Subtypes</option>
-          {filterOptions.trainerSubtypes.map((trainerSubtype) => (
-            <option key={trainerSubtype.id} value={trainerSubtype.id}>
-              {trainerSubtype.name}
-            </option>
-          ))}
-        </select>
-      )}
+        {filterOptions.pokemonSpecies && (
+          <FilterSelect
+            label="Pokémon"
+            value={selectedPokemonSpeciesId}
+            onChange={setSelectedPokemonSpeciesId}
+            defaultLabel="All Pokémon"
+            options={filterOptions.pokemonSpecies}
+          />
+        )}
 
-      {filterOptions.energySubtypes &&(
-        <select 
-          value={selectedEnergySubtypeId ?? ""}
-          onChange={(e) => 
-            setSelectedEnergySubtypeId(e.target.value === "" ? null : Number(e.target.value))
-          }
-          style={{padding: "0.5rem" }}
-        >
-          <option value="">Energy Subtypes</option>
-          {filterOptions.energySubtypes.map((energySubtype) => (
-            <option key={energySubtype.id} value={energySubtype.id}>
-              {energySubtype.name}
-            </option>
-          ))}
-        </select>
-      )}
+        {filterOptions.variantTypes && (
+          <FilterSelect
+            label="Variant"
+            value={selectedVariantTypeId}
+            onChange={setSelectedVariantTypeId}
+            defaultLabel="All Variants"
+            options={filterOptions.variantTypes}
+          />
+        )}
 
-      {filterOptions.pokemonTrainers &&(
-        <select 
-          value={selectedPokemonTrainerId ?? ""}
-          onChange={(e) => 
-            setSelectedPokemonTrainerId(e.target.value === "" ? null : Number(e.target.value))
-          }
-          style={{padding: "0.5rem" }}
-        >
-          <option value="">Pokemon Trainers</option>
-          {filterOptions.pokemonTrainers.map((trainer) => (
-            <option key={trainer.id} value={trainer.id}>
-              {trainer.name}
-            </option>
-          ))}
-        </select>
-      )}
+        {filterOptions.trainerSubtypes && (
+          <FilterSelect
+            label="Trainer Subtype"
+            value={selectedTrainerSubtypeId}
+            onChange={setSelectedTrainerSubtypeId}
+            defaultLabel="Trainer Subtypes"
+            options={filterOptions.trainerSubtypes}
+          />
+        )}
 
-      {filterOptions.cardLanguages &&(
-        <select 
-          value={selectedCardLanguageId ?? ""}
-          onChange={(e) => 
-            setSelectedCardLanguageId(e.target.value === "" ? null : Number(e.target.value))
-          }
-          style={{padding: "0.5rem" }}
-        >
-          <option value="">Languages</option>
-          {filterOptions.cardLanguages.map((language) => (
-            <option key={language.id} value={language.id}>
-              {language.name}
-            </option>
-          ))}
-        </select>
-      )}
+        {filterOptions.energySubtypes && (
+          <FilterSelect
+            label="Energy Subtype"
+            value={selectedEnergySubtypeId}
+            onChange={setSelectedEnergySubtypeId}
+            defaultLabel="Energy Subtypes"
+            options={filterOptions.energySubtypes}
+          />
+        )}
+
+        {filterOptions.pokemonTrainers && (
+          <FilterSelect
+            label="Pokémon Trainer"
+            value={selectedPokemonTrainerId}
+            onChange={setSelectedPokemonTrainerId}
+            defaultLabel="Pokémon Trainers"
+            options={filterOptions.pokemonTrainers}
+          />
+        )}
+
+        {filterOptions.cardLanguages && (
+          <FilterSelect
+            label="Language"
+            value={selectedCardLanguageId}
+            onChange={setSelectedCardLanguageId}
+            defaultLabel="Languages"
+            options={filterOptions.cardLanguages}
+          />
+        )}
+      </div>
+    </div>
+  );
+}
+
+function FilterSelect({
+  label,
+  value,
+  onChange,
+  defaultLabel,
+  options,
+}: {
+  label: string;
+  value: number | null;
+  onChange: (v: number | null) => void;
+  defaultLabel: string;
+  options: { id: number; name: string }[];
+}) {
+  return (
+    <div className="flex flex-col">
+      <label className="text-sm font-semibold text-blue-700 mb-1">{label}</label>
+
+      <select
+        value={value ?? ""}
+        onChange={(e) =>
+          onChange(e.target.value === "" ? null : Number(e.target.value))
+        }
+        className="
+          w-full
+          border border-gray-300
+          rounded-lg
+          px-3 py-2
+          text-sm
+          bg-white
+          focus:outline-none
+          focus:ring-2
+          focus:ring-blue-500
+        "
+      >
+        <option value="">{defaultLabel}</option>
+        {options.map((o) => (
+          <option key={o.id} value={o.id}>
+            {o.name}
+          </option>
+        ))}
+      </select>
     </div>
   );
 }

@@ -3,6 +3,8 @@ export async function getCardImage(languageCode: string, setCode: string, cardNu
     const params = new URLSearchParams({ languageCode, setCode, cardNumber });
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/card-image?${params.toString()}`);
 
+    console.log(res);
+
     if (!res.ok) {
       console.error("Failed to fetch image");
       return null;

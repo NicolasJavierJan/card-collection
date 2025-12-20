@@ -1,5 +1,5 @@
+// components/Sidebar.tsx
 "use client";
-
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { fetchCardSets } from "@/lib/apiCardSets";
@@ -9,164 +9,117 @@ export default function Sidebar() {
   const [sets, setSets] = useState<CardSet[]>([]);
   const [setsOpen, setSetsOpen] = useState(false);
 
-useEffect(() => {
-  fetchCardSets()
-    .then((sets) => setSets(sets))
-    .catch((err) => console.error(err));
-}, []);
+  useEffect(() => {
+    fetchCardSets()
+      .then((s) => setSets(s))
+      .catch(console.error);
+  }, []);
 
   return (
     <aside
       style={{
-        width: "220px",
-        borderRight: "1px solid #ddd",
-        padding: "1rem",
-        flexShrink: 0,
+        width: "300px",
+        backgroundColor: "#e3edf7",
+        borderRight: "1px solid #c9d4e3",
+        padding: "1.5rem",
         display: "flex",
         flexDirection: "column",
-        gap: "1rem",
+        flexShrink: 0,
+        height: "100%", // use 100% of parent flex container
       }}
     >
-      <h2>Menu</h2>
+      {/* ACTIONS */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+        <SidebarButton href="/add-cards" label="+ Add Cards" />
+        <SidebarButton href="/add-sets" label="+ Add Sets" />
+        <SidebarButton href="/add-locations" label="+ Add Locations" />
+        <SidebarButton href="/move-sets" label="Move Sets" />
+      </div>
 
-      <Link
-        href="/add-cards"
-        style={{
-          display: "block",
-          backgroundColor: "#0070f3",
-          color: "white",
-          textAlign: "center",
-          padding: "0.75rem 1rem",
-          borderRadius: "5px",
-          fontWeight: "bold",
-          textDecoration: "none",
-          cursor: "pointer",
-        }}
-      >
-        + Add Cards
-      </Link>
+      {/* NAVIGATION */}
+      <div style={{ marginTop: "2rem", display: "flex", flexDirection: "column", overflowY: "auto" }}>
+        <SidebarNavLink href="/my-collection" label="Collection" />
+        <SidebarNavLink href="/card-dex" label="Card Dex" />
 
-      <Link
-        href="/add-sets"
-        style={{
-          display: "block",
-          backgroundColor: "#0070f3",
-          color: "white",
-          textAlign: "center",
-          padding: "0.75rem 1rem",
-          borderRadius: "5px",
-          fontWeight: "bold",
-          textDecoration: "none",
-          cursor: "pointer",
-        }}
-      >
-        + Add Sets
-      </Link>
+        {/* Sets dropdown */}
+        <div>
+          <button
+            onClick={() => setSetsOpen(!setsOpen)}
+            style={{
+              background: "none",
+              border: "none",
+              color: "#0050b8",
+              fontWeight: "bold",
+              fontSize: "1rem",
+              cursor: "pointer",
+              padding: 0,
+              textAlign: "left",
+              width: "100%",
+            }}
+          >
+            {setsOpen ? "Hide Sets ▲" : "Show Sets ▼"}
+          </button>
 
-      <Link
-        href="/add-locations"
-        style={{
-          display: "block",
-          backgroundColor: "#0070f3",
-          color: "white",
-          textAlign: "center",
-          padding: "0.75rem 1rem",
-          borderRadius: "5px",
-          fontWeight: "bold",
-          textDecoration: "none",
-          cursor: "pointer",
-        }}
-      >
-        + Add Locations
-      </Link>
-
-            <Link
-        href="/move-sets"
-        style={{
-          display: "block",
-          backgroundColor: "#0070f3",
-          color: "white",
-          textAlign: "center",
-          padding: "0.75rem 1rem",
-          borderRadius: "5px",
-          fontWeight: "bold",
-          textDecoration: "none",
-          cursor: "pointer",
-        }}
-      >
-        Move Sets
-      </Link>
-
-      <nav>
-        <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-
-          <li>
-            <Link
-              href="/my-collection"
-              style={{ color: "#0070f3", textDecoration: "none" }}
-            >
-              Collection
-            </Link>
-          </li>
-
-          <li>
-            <Link
-              href="/card-dex"
-              style={{ color: "#0070f3", textDecoration: "none" }}
-            >
-              Card Dex
-            </Link>
-          </li>
-
-          <li style={{ marginBottom: "0.5rem" }}>
-            <button
-              onClick={() => setSetsOpen(!setsOpen)}
-              style={{
-                background: "none",
-                border: "none",
-                padding: 0,
-                fontWeight: "bold",
-                color: "#0070f3",
-                cursor: "pointer",
-                textAlign: "left",
-              }}
-              aria-expanded={setsOpen}
-            >
-              Sets {setsOpen ? "▼" : "▶"}
-            </button>
-
-            {setsOpen && (
-              <ul
-                style={{
-                  listStyle: "none",
-                  paddingLeft: "1rem",
-                  marginTop: "0.5rem",
-                  maxHeight: "calc(95vh - 200px)",
-                  overflowY: "auto",
-                }}
-              >
-                {sets.length === 0 ? (
-                  <li style={{ fontStyle: "italic", color: "#888" }}>
-                    No sets found
-                  </li>
-                ) : (
-                  sets.map((set) => (
-                    <li key={set.id} style={{ marginBottom: "0.25rem" }}>
-                      <Link
-                        href={`/sets/${set.id}`}
-                        style={{ color: "#0070f3", textDecoration: "none" }}
-                      >
-                        {set.name}
-                      </Link>
-                    </li>
-                  ))
-                )}
-              </ul>
-            )}
-          </li>
-
-        </ul>
-      </nav>
+          {setsOpen &&
+            sets.map((set) => (
+              <SidebarNavLink
+                key={set.id}
+                href={`/sets/${set.id}`}
+                label={set.name}
+                small
+              />
+            ))}
+        </div>
+      </div>
     </aside>
+  );
+}
+
+/* ----------------- COMPONENTS ----------------- */
+function SidebarButton({ href, label }: { href: string; label: string }) {
+  return (
+    <Link
+      href={href}
+      style={{
+        display: "block",
+        width: "100%",
+        padding: "0.75rem 1rem",
+        borderRadius: "8px",
+        backgroundColor: "#0070f3",
+        color: "#fff",
+        fontWeight: 600,
+        textDecoration: "none",
+        textAlign: "center",
+        transition: "0.2s",
+        border: "2px solid transparent",
+      }}
+    >
+      {label}
+    </Link>
+  );
+}
+
+function SidebarNavLink({
+  href,
+  label,
+  small,
+}: {
+  href: string;
+  label: string;
+  small?: boolean;
+}) {
+  return (
+    <Link
+      href={href}
+      style={{
+        display: "block",
+        color: "#0050b8",
+        fontWeight: small ? 500 : 600,
+        fontSize: small ? "0.9rem" : "1rem",
+        textDecoration: "none",
+      }}
+    >
+      {label}
+    </Link>
   );
 }

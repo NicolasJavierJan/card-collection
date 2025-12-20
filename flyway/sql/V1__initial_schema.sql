@@ -73,5 +73,6 @@ CREATE TABLE Pokemon_Cards (
     energy_subtype_id INT REFERENCES Energy_Subtypes(id),
     pokemon_trainer_id INT REFERENCES Pokemon_Trainers(id),
     card_language_id INT NOT NULL REFERENCES Card_Languages(id),
-    image_path TEXT
+    image_path TEXT,
+    added_at TIMESTAMP
 );

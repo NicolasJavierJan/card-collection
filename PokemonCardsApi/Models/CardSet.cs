@@ -4,4 +4,8 @@ public class CardSet
     public required string Name { get; set; }
     public required string Code { get; set; }
     public int CardTotal { get; set; }
+
+    public ICollection<CardSetLocation> CardSetLocations { get; set; } = new List<CardSetLocation>();
+
 }
+

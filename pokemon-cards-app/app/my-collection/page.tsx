@@ -2,13 +2,14 @@
 
 import { useEffect, useState, useRef } from "react";
 import Card from "../../components/Card";
-import { PokemonCard } from "../../models/PokemonCard";
 import { fetchAllCards } from "@/lib/apiCollection";
 import CardFilters from "@/components/CardFilters";
 import { useFilterOptions } from "@/context/filterOptionsProvider";
+import { PokemonCardCollection } from "@/models/PokemonCardCollection";
+import CardEditModal from "@/components/CardEditModal";
 
 export default function MyCollectionPage() {
-  const [cards, setCards] = useState<PokemonCard[]>([]);
+  const [cards, setCards] = useState<PokemonCardCollection[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(true);
@@ -42,6 +43,14 @@ export default function MyCollectionPage() {
     pokemonTrainerId: null,
     cardLanguageId: null
   });
+
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
+
+  const handleEditClick = (cardId: string) => {
+    setSelectedCardId(cardId);
+    setIsEditModalOpen(true);
+  };
 
   const LIMIT = 20;
 
@@ -140,7 +149,7 @@ export default function MyCollectionPage() {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))",
+          gridTemplateColumns: "repeat(auto-fill, minmax(190px, 1fr))",
           gap: "0.75rem",
           justifyContent: "center",
         }}
@@ -151,9 +160,13 @@ export default function MyCollectionPage() {
           card={card}
           actions={
             <>
-              <button style={buttonStyle}>Edit</button>
-              <button style={buttonStyle}>Move</button>
-              <button style={buttonStyle}>Delete</button>
+              <button className="cursor-pointer border border-blue-500 text-blue-600 px-3 py-1 rounded-md text-sm font-medium hover:bg-blue-600 hover:text-white transition-colors duration-150"
+                      onClick={() => {
+                      setSelectedCardId(card.id); // store which card we’re editing
+                      setIsEditModalOpen(true);    // open the modal
+                    }}>Edit</button>
+              <button className="cursor-pointer border border-blue-500 text-blue-600 px-3 py-1 rounded-md text-sm font-medium hover:bg-blue-600 hover:text-white transition-colors duration-150">Move</button>
+              <button className="cursor-pointer border border-blue-500 text-blue-600 px-3 py-1 rounded-md text-sm font-medium hover:bg-blue-600 hover:text-white transition-colors duration-150">Delete</button>
             </>
           } />
         ))}
@@ -161,6 +174,13 @@ export default function MyCollectionPage() {
 
       {loading && <p>Loading...</p>}
       {!hasMore && <p>No more cards.</p>}
+
+      <CardEditModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        cardId={selectedCardId}
+        filterOptions={filterOptions}
+      />
     </div>
   );
 }

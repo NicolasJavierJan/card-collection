@@ -5,6 +5,15 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
+
+        CreateMap<PokemonCard, PokemonCardCollectionDto>()
+            .ForMember(d => d.SetName,
+                o => o.MapFrom(s => s.CardSet!.Name))
+            .ForMember(d => d.LanguageName,
+                o => o.MapFrom(s => s.CardLanguage!.Name))
+            .ForMember(d => d.LocationName,
+                o => o.MapFrom(s => s.Location!.Name));
+
         CreateMap<PokemonCard, PokemonCardDto>()
             .ForMember(dest => dest.CardTypeName, opt => opt.MapFrom(src => src.CardType != null ? src.CardType.Name : null))
             .ForMember(dest => dest.SetName, opt => opt.MapFrom(src => src.CardSet != null ? src.CardSet.Name : null))
