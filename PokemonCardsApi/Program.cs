@@ -77,4 +77,8 @@ app.MapCardSetLocationsEndpoints();
 app.MapDashboardEndpoints();
 app.MapControllers();
 
+app.MapPokemonSpeciesEndpoints();
+app.MapVariantTypesEndpoints();
+app.MapCardTypesEndpoints();
+
 app.Run();

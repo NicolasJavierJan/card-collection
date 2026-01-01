@@ -10,29 +10,49 @@ public static class CardImageEndpoint
 
             string? languageCode = query["languageCode"];
             string? setCode = query["setCode"];
-            string? cardNumber = query["cardNumber"];
+            string? cardNumberRaw = query["cardNumber"];
 
-            if (string.IsNullOrEmpty(languageCode) || 
-                string.IsNullOrEmpty(setCode) || 
-                string.IsNullOrEmpty(cardNumber))
+            if (string.IsNullOrWhiteSpace(languageCode) ||
+                string.IsNullOrWhiteSpace(setCode) ||
+                string.IsNullOrWhiteSpace(cardNumberRaw))
             {
                 return Results.BadRequest(new { error = "Missing query parameters" });
             }
 
-            var imagePath = app.Configuration["ImagePath"] ?? Environment.GetEnvironmentVariable("IMAGE_PATH");
+            if (!int.TryParse(cardNumberRaw, out int cardNumber))
+            {
+                return Results.BadRequest(new { error = "Invalid cardNumber" });
+            }
+
+            var imagePath =
+                app.Configuration["ImagePath"]
+                ?? Environment.GetEnvironmentVariable("IMAGE_PATH");
+
             if (string.IsNullOrEmpty(imagePath) || !Directory.Exists(imagePath))
             {
                 return Results.Problem("Image path is not configured or does not exist.");
             }
 
-            string[] extensions = new[] { "png", "jpg", "jpeg", "webp" };
+            string[] extensions = { "png", "jpg", "jpeg", "webp" };
 
             foreach (var ext in extensions)
             {
-                string filePath = Path.Combine(imagePath, languageCode, setCode, $"{setCode}-{cardNumber}.{ext}");
+                string numberPart = languageCode.Equals("ja", StringComparison.OrdinalIgnoreCase)
+                    ? cardNumber.ToString("D3") // 001, 012, 099
+                    : cardNumber.ToString();   // 1, 12, 99
+
+                string filePath = Path.Combine(
+                    imagePath,
+                    languageCode,
+                    setCode,
+                    $"{setCode}-{numberPart}.{ext}"
+                );
+
                 if (File.Exists(filePath))
                 {
-                    string relativeUrl = $"/static-images/{languageCode}/{setCode}/{setCode}-{cardNumber}.{ext}";
+                    string relativeUrl =
+                        $"/static-images/{languageCode}/{setCode}/{setCode}-{numberPart}.{ext}";
+
                     return Results.Ok(new { imageUrl = relativeUrl });
                 }
             }

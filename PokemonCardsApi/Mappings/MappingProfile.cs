@@ -28,13 +28,19 @@ public class MappingProfile : Profile
 
         CreateMap<CardSet, CardSetDto>();
 
-        CreateMap<CardType, CardTypeDto>();
-
         CreateMap<Location, LocationDto>();
 
         CreateMap<PokemonSpecies, PokemonSpeciesDto>();
+        CreateMap<PokemonSpeciesCreateDto, PokemonSpecies>();
+        CreateMap<PokemonSpeciesUpdateDto, PokemonSpecies>();
 
         CreateMap<VariantType, VariantTypeDto>();
+        CreateMap<VariantTypeCreateDto, VariantType>();
+        CreateMap<VariantTypeUpdateDto, VariantType>();
+
+        CreateMap<CardType, CardTypeDto>();
+        CreateMap<CardTypeCreateDto, CardType>();
+        CreateMap<CardTypeUpdateDto, CardType>();
 
         CreateMap<CardLanguage, CardLanguageDto>();
 

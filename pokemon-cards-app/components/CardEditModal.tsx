@@ -42,7 +42,14 @@ export default function CardEditModal({
   const [error, setError] = useState<string | null>(null);
   const [formState, setFormState] = useState<EditableCardDto | null>(null);
   const [imageChanged, setImageChanged] = useState(false);
-  const [displayImage, setDisplayImage] = useState(formState?.imagePath || "/placeholder.png");
+  const [displayImage, setDisplayImage] = useState<string | null>(null);
+
+  useEffect(() => {
+  if (cardData) {
+    setFormState(cardData);
+    setDisplayImage(cardData.imagePath);
+  }
+}, [cardData]);
 
   useEffect(() => {
     if (formState) setDisplayImage(formState.imagePath || "/placeholder.png");
@@ -115,7 +122,12 @@ export default function CardEditModal({
       formState.cardNumber.toString()
     );
 
-    if (newImage) setDisplayImage(newImage);
+    if (newImage) {
+      setDisplayImage(newImage);
+      setFormState(prev =>
+        prev ? { ...prev, imagePath: newImage } : prev
+      );
+    }
   };
 
 
@@ -137,10 +149,15 @@ export default function CardEditModal({
               {/* IMAGE */}
               <div className="flex-shrink-0">
                 <img
-                  src={displayImage ? `${baseUrl}${displayImage}` : "/placeholder.png"}
-                  alt={formState?.cardName}
+                  src={
+                    displayImage
+                      ? `${baseUrl}${displayImage}`
+                      : "/placeholder.png"
+                  }
+                  alt={formState.cardName}
                   className="w-[260px] rounded-xl shadow-md"
                 />
+
                 <button
                   type="button"
                   onClick={handleFetchImage}
