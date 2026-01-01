@@ -38,8 +38,17 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<PokemonTrainer>().ToTable("pokemon_trainers");
         modelBuilder.Entity<TrainerSubtype>().ToTable("trainer_subtypes");
         modelBuilder.Entity<VariantType>().ToTable("variant_types");
+        
         modelBuilder.Entity<CardSetLocation>()
             .HasKey(csl => new { csl.CardSetId, csl.LocationId });
+        modelBuilder.Entity<CardSetLocation>()
+            .HasOne(csl => csl.CardSet)
+            .WithMany(cs => cs.CardSetLocations)
+            .HasForeignKey(csl => csl.CardSetId);
+        modelBuilder.Entity<CardSetLocation>()
+            .HasOne(csl => csl.Location)
+            .WithMany(l => l.CardSetLocations)
+            .HasForeignKey(csl => csl.LocationId);
 
         modelBuilder.Entity<RecommendationsBlacklistedCard>(entity =>
         {

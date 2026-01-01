@@ -6,6 +6,5 @@ public class CardSet
     public int CardTotal { get; set; }
 
     public ICollection<CardSetLocation> CardSetLocations { get; set; } = new List<CardSetLocation>();
-
 }
 

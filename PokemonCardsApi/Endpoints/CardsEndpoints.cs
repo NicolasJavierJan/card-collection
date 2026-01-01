@@ -1,4 +1,4 @@
-using AutoMapper;
+/* using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 public static class CardsEndpoints
@@ -77,3 +77,4 @@ public class EditableCardDto
     public int? CardLanguageId { get; set; }
     public string? ImagePath { get; set; }
 }
+ */

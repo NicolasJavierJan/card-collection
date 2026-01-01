@@ -67,18 +67,23 @@ app.UseHttpsRedirection();
 
 app.MapCardEndpoints();
 app.MapCardDex();
-app.MapCardSetEndpoints();
 app.MapCardFilters();
-app.MapCardsEndpoints();
+//app.MapCardsEndpoints();
 app.MapCardImageEndpoint();
 app.MapCardRecommendationEndpoint();
-app.MapLocationEndpoints();
-app.MapCardSetLocationsEndpoints();
-app.MapDashboardEndpoints();
+//app.MapDashboardEndpoints();
 app.MapControllers();
 
 app.MapPokemonSpeciesEndpoints();
 app.MapVariantTypesEndpoints();
 app.MapCardTypesEndpoints();
+app.MapCardSetEndpoints();
+app.MapLocationEndpoints();
+app.MapTrainerSubtypeEndpoints();
+app.MapEnergySubtypeEndpoints();
+app.MapPokemonTrainerEndpoints();
+app.MapCardLanguageEndpoints();
+app.MapCardSetLocationsEndpoints();
+app.MapPokemonCardEndpoints();
 
 app.Run();

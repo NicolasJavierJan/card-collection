@@ -4,10 +4,3 @@ public class LocationDto
     public required string Name { get; set; }
     public LocationType Type { get; set; }
 }
-
-public enum LocationType
-{
-    CardDex,
-    Binder,
-    Box
-}

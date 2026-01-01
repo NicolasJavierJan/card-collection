@@ -1,4 +1,84 @@
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+public static class CardSetLocationsEndpoints
+{
+    public static void MapCardSetLocationsEndpoints(this WebApplication app)
+    {
+        app.MapGet("/api/card-sets/{cardSetId:int}/locations", async (
+            int cardSetId,
+            AppDbContext db) =>
+        {
+            var exists = await db.CardSets.AnyAsync(cs => cs.Id == cardSetId);
+            if (!exists)
+                return Results.NotFound();
+
+            var locations = await db.CardSetLocations
+                .Where(x => x.CardSetId == cardSetId)
+                .Include(x => x.Location)
+                .Select(x => new
+                {
+                    x.Location.Id,
+                    x.Location.Name,
+                    x.Location.Type
+                })
+                .ToListAsync();
+
+            return Results.Ok(locations);
+        });
+
+        app.MapPost("/api/card-sets/{cardSetId:int}/locations", async (
+            int cardSetId,
+            AddCardSetLocationDto dto,
+            AppDbContext db) =>
+        {
+            if (!await db.CardSets.AnyAsync(cs => cs.Id == cardSetId))
+                return Results.NotFound(new { error = "Card set not found." });
+
+            if (!await db.Locations.AnyAsync(l => l.Id == dto.LocationId))
+                return Results.BadRequest(new { error = "Location not found." });
+
+            var exists = await db.CardSetLocations.AnyAsync(x =>
+                x.CardSetId == cardSetId &&
+                x.LocationId == dto.LocationId);
+
+            if (exists)
+                return Results.Conflict(new { error = "Location already linked to card set." });
+
+            db.CardSetLocations.Add(new CardSetLocation
+            {
+                CardSetId = cardSetId,
+                LocationId = dto.LocationId
+            });
+
+            await db.SaveChangesAsync();
+
+            return Results.Created(
+                $"/api/card-sets/{cardSetId}/locations/{dto.LocationId}",
+                null);
+        });
+
+        app.MapDelete("/api/card-sets/{cardSetId:int}/locations/{locationId:int}", async (
+            int cardSetId,
+            int locationId,
+            AppDbContext db) =>
+        {
+            var link = await db.CardSetLocations
+                .FirstOrDefaultAsync(x =>
+                    x.CardSetId == cardSetId &&
+                    x.LocationId == locationId);
+
+            if (link is null)
+                return Results.NotFound();
+
+            db.CardSetLocations.Remove(link);
+            await db.SaveChangesAsync();
+
+            return Results.NoContent();
+        });
+    }
+}
+
+/* using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 
@@ -74,4 +154,4 @@ public class DeleteCardSetLocationDto
 {
     public int CardSetId { get; set; }
     public LocationType Type { get; set; } 
-}
+} */
